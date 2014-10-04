@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 public class StoryBase {
     private final Firebase fb;
     final ConcurrentLinkedQueue<DataSnapshot> suggestions = new ConcurrentLinkedQueue<>();
-    private Long timeStarted;
+    private Long timeStarted = null;
 
     public StoryBase(Firebase fb) {
         this.fb = fb;
@@ -91,8 +91,9 @@ public class StoryBase {
         Map<String, Object> mp = new HashMap<>();
         mp.put("started", "true");
         mp.put("phase", phase);
-        mp.put("time_started",
-                timeStarted == null ? getServerOffsetMillis() : timeStarted);
+        mp.put("time_story_started",
+                timeStarted = (timeStarted == null ? getServerOffsetMillis() : timeStarted));
+        mp.put("time_phase_started", getServerOffsetMillis());
         syncSet("attributes", mp);
     }
 }

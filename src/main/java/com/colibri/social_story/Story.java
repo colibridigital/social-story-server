@@ -13,8 +13,8 @@ public class Story {
     private int users = 0;
     private int minUsers;
 
-    private static final int SUGGEST_TIME = 10 * 1000;
-    private static final int VOTE_TIME = 10 * 1000;
+    private static final int SUGGEST_TIME = 30 * 1000;
+    private static final int VOTE_TIME = 30 * 1000;
 
     public Story(int minUsers, Firebase fb) {
         this.minUsers = minUsers;
