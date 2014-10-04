@@ -1,15 +1,20 @@
 package com.colibri.social_story;
 
-import com.firebase.client.*;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-public class App
-{
+public class App {
     public static final String FB_URL = "https://sizzling-torch-6706.firebaseio.com/messages";
     public static final int MESSAGE_COUNT = 3;
+
+    public static void main(String[] args) throws InterruptedException {
+        (new App()).run();
+    }
 
     // Waits for a few messages, prints IDK, removes all messages and exits
     public void run() throws InterruptedException {
@@ -55,10 +60,6 @@ public class App
             }
         });
         done.await();
-    }
-
-    public static void main( String[] args ) throws InterruptedException {
-        (new App()).run();
     }
 }
 
