@@ -3,6 +3,7 @@ package com.colibri.social_story;
 import com.firebase.client.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
@@ -10,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 public class StoryBase {
     private final Firebase fb;
     final ConcurrentLinkedQueue<DataSnapshot> suggestions = new ConcurrentLinkedQueue<>();
+    private Long timeStarted;
 
     public StoryBase(Firebase fb) {
         this.fb = fb;
@@ -75,5 +77,22 @@ public class StoryBase {
     public void clearSuggestions() throws InterruptedException {
         suggestions.clear();
         syncClear("suggestions");
+    }
+
+    public void setVotePhase() throws InterruptedException {
+        setPhase("suggest");
+    }
+
+    public void setSuggestPhase() throws InterruptedException {
+        setPhase("vote");
+    }
+
+    private void setPhase(String phase) throws InterruptedException {
+        Map<String, Object> mp = new HashMap<>();
+        mp.put("started", "true");
+        mp.put("phase", phase);
+        mp.put("time_started",
+                timeStarted == null ? getServerOffsetMillis() : timeStarted);
+        syncSet("attributes", mp);
     }
 }

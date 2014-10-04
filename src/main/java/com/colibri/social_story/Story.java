@@ -13,6 +13,8 @@ public class Story {
     private int users = 0;
     private int minUsers;
 
+    private static final int SUGGEST_TIME = 10 * 1000;
+    private static final int VOTE_TIME = 10 * 1000;
 
     public Story(int minUsers, Firebase fb) {
         this.minUsers = minUsers;
@@ -34,22 +36,13 @@ public class Story {
     }
 
     private void start() throws InterruptedException {
-        System.out.println("Story started");
-        Map<String, Object> mp = new HashMap<>();
-        mp.put("started", "true");
-        mp.put("phase", "suggestion");
-        mp.put("time_started", Long.toString(sb.getServerOffsetMillis()));
-        sb.syncSet("attributes", mp);
-
-        // add the handleers
+        sb.setSuggestPhase();
         sb.addSuggestionListener("suggestions");
 
-
-        Timer timer = new Timer();
         while (true) {
-            Thread.sleep(2000);
+            Thread.sleep(SUGGEST_TIME);
             suggestionEnd();
-            Thread.sleep(2000);
+            Thread.sleep(VOTE_TIME);
             voteEnd();
             roundEnd();
         }
@@ -59,22 +52,26 @@ public class Story {
 
     private void suggestionEnd() throws InterruptedException {
         System.out.println("Suggestion end");
-        ConcurrentLinkedQueue<DataSnapshot> suggestions = sb.getSuggestions();
 
-        for (DataSnapshot ds : suggestions) {
+        Map<String, Object> m = new HashMap<>();
+        for (DataSnapshot ds : sb.getSuggestions()) {
             System.out.println(ds.getValue() + " " + ds.getName());
-            // TODO do something useful
+            m.put((String)ds.getValue(), ds.getName());
         }
+        sb.syncSet("words", m);
+
+        sb.setVotePhase();
 
         sb.clearSuggestions();
     }
 
     private void voteEnd() {
+        // TODO process votes and add to story
 
     }
 
-    private void roundEnd() {
-        // round == suggest + vote
+    private void roundEnd() throws InterruptedException {
+        sb.setSuggestPhase();
     }
 
     private void end() {
