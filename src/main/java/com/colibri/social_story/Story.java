@@ -9,6 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class Story {
 
+    private String story = "My big story";
     private final StoryBase sb;
     private int users = 0;
     private int minUsers;
@@ -38,6 +39,7 @@ public class Story {
     private void start() throws InterruptedException {
         sb.setSuggestPhase();
         sb.addSuggestionListener("suggestions");
+        sb.addVoteListener("votes");
 
         while (true) {
             Thread.sleep(SUGGEST_TIME);
@@ -63,9 +65,15 @@ public class Story {
         sb.setVotePhase();
     }
 
-    private void voteEnd() {
-        // TODO process votes and add to story
-
+    private void voteEnd() throws InterruptedException {
+        Map<String, Object> m = new HashMap<>();
+        DataSnapshot ds = sb.getVotes().peek();
+        if (ds != null) {
+            story = story + ds.getValue();
+            m.put("story", story);
+            sb.syncSet("", m);
+        }
+        sb.clearVotes();
     }
 
     private void roundEnd() throws InterruptedException {

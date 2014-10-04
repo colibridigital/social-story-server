@@ -9,8 +9,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class StoryBase {
+
     private final Firebase fb;
     final ConcurrentLinkedQueue<DataSnapshot> suggestions = new ConcurrentLinkedQueue<>();
+    final ConcurrentLinkedQueue<DataSnapshot> votes = new ConcurrentLinkedQueue<>();
     private Long timeStarted = null;
 
     public StoryBase(Firebase fb) {
@@ -38,6 +40,16 @@ public class StoryBase {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 suggestions.add(dataSnapshot);
+            }
+        });
+    }
+
+    void addVoteListener(String path)
+            throws InterruptedException {
+        fb.child(path).addChildEventListener(new FirebaseChildEventListenerAdapter() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                votes.add(dataSnapshot);
             }
         });
     }
@@ -79,6 +91,11 @@ public class StoryBase {
         syncClear("suggestions");
     }
 
+    public void clearVotes() throws InterruptedException {
+        votes.clear();
+        syncClear("votes");
+    }
+
     public void setVotePhase() throws InterruptedException {
         setPhase("vote");
     }
@@ -95,5 +112,9 @@ public class StoryBase {
                 timeStarted = (timeStarted == null ? getServerOffsetMillis() : timeStarted));
         mp.put("time_phase_started", getServerOffsetMillis());
         syncSet("attributes", mp);
+    }
+
+    public ConcurrentLinkedQueue<DataSnapshot> getVotes() {
+        return votes;
     }
 }
