@@ -31,4 +31,9 @@ public class AppTest
     public void testApp() {
         assertTrue(true);
     }
+
+    public void testJDK() {
+        Runnable r = () -> System.out.println("JDK 1.8 OK");
+        r.run();
+    }
 }
