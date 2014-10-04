@@ -2,37 +2,49 @@ package com.colibri.social_story;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
-import java.util.List;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class Story {
 
-    private final Firebase fb;
+    private final StoryBase sb;
     private int users = 0;
     private int minUsers;
     final CountDownLatch done = new CountDownLatch(1);
 
     public Story(int minUsers, Firebase fb) {
         this.minUsers = minUsers;
-        this.fb = fb;
+        this.sb = new StoryBase(fb);
     }
 
     // wait for min users and start
     void connect() throws InterruptedException {
-        fb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+        sb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                addUser();
+                try {
+                    addUser();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
         done.await();
     }
 
-    private void start() {
+    private void start() throws InterruptedException {
         System.out.println("Story started");
+        Map<String, Object> mp = new HashMap<>();
+        mp.put("started", "true");
+        mp.put("phase", "suggestion");
+        System.out.println(sb.getServerOffsetMillis());
+        mp.put("time_started", Long.toString(sb.getServerOffsetMillis()));
+        sb.syncSet("attributes", mp);
+
+        end();
     }
 
     private void suggestionEnd() {
@@ -48,18 +60,20 @@ public class Story {
     }
 
     private void end() {
+        System.out.println("Story end");
         done.countDown();
     }
 
-    private void addUser() {
+    private void addUser() throws InterruptedException {
         System.out.println("User registered");
         users++;
-        if (users > this.minUsers) {
+        if (users >= this.minUsers) {
             start();
         }
     }
 
 }
+
 
 
 

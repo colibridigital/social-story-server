@@ -18,7 +18,7 @@ public class App {
     public void run() throws InterruptedException {
         final Firebase fb = new Firebase(FB_URL);
 
-        Story story = new Story(2, fb);
+        Story story = new Story(1, fb);
         story.connect();
 
     }
