@@ -59,10 +59,8 @@ public class Story {
             m.put((String)ds.getValue(), ds.getName());
         }
         sb.syncSet("words", m);
-
-        sb.setVotePhase();
-
         sb.clearSuggestions();
+        sb.setVotePhase();
     }
 
     private void voteEnd() {

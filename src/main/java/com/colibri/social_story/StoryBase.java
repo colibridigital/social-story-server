@@ -80,11 +80,11 @@ public class StoryBase {
     }
 
     public void setVotePhase() throws InterruptedException {
-        setPhase("suggest");
+        setPhase("vote");
     }
 
     public void setSuggestPhase() throws InterruptedException {
-        setPhase("vote");
+        setPhase("suggest");
     }
 
     private void setPhase(String phase) throws InterruptedException {
