@@ -13,7 +13,7 @@ public class Story {
     private final StoryBase sb;
     private int users = 0;
     private int minUsers;
-    final CountDownLatch done = new CountDownLatch(1);
+
 
     public Story(int minUsers, Firebase fb) {
         this.minUsers = minUsers;
@@ -22,17 +22,16 @@ public class Story {
 
     // wait for min users and start
     void connect() throws InterruptedException {
+        final CountDownLatch done = new CountDownLatch(this.minUsers);
         sb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                try {
-                    addUser();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+                done.countDown();
+        }});
+
         done.await();
+
+        addUser();
     }
 
     private void start() throws InterruptedException {
@@ -61,7 +60,6 @@ public class Story {
 
     private void end() {
         System.out.println("Story end");
-        done.countDown();
     }
 
     private void addUser() throws InterruptedException {
