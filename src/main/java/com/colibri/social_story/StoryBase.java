@@ -2,22 +2,22 @@ package com.colibri.social_story;
 
 import com.firebase.client.*;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class StoryBase {
     private final Firebase fb;
+    final ConcurrentLinkedQueue<DataSnapshot> suggestions = new ConcurrentLinkedQueue<>();
 
     public StoryBase(Firebase fb) {
         this.fb = fb;
     }
 
-    public void syncClear() throws InterruptedException {
+    public void syncClear(String path) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
-        fb.removeValue(new Firebase.CompletionListener() {
+        fb.child(path).removeValue(new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 done.countDown();
@@ -30,21 +30,14 @@ public class StoryBase {
         return fb.child(path);
     }
 
-    Object syncReadMessage(String path)
+    void addSuggestionListener(String path)
             throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(1);
-        final List<Object> l = new ArrayList<>();
-        System.out.println(fb.getRoot());
-        fb.addChildEventListener(new FirebaseChildEventListenerAdapter() {
+        fb.child(path).addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println("Something");
-                done.countDown();
-                l.add(dataSnapshot.getValue());
+                suggestions.add(dataSnapshot);
             }
         });
-        done.await();
-        return l.get(0);
     }
 
     void syncSet(String path, Map<String, Object> message) throws InterruptedException {
@@ -52,12 +45,10 @@ public class StoryBase {
         fb.child(path).setValue(message, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                System.out.println("Done");
                 done.countDown();
             }
         });
         done.await();
-        System.out.println("Done2");
     }
 
     void syncPush(Map<String, String> message) throws InterruptedException {
@@ -75,5 +66,14 @@ public class StoryBase {
         Date d = new Date();
         // return (Integer)syncReadMessage(".info/serverTimeOffset");
         return d.getTime();
+    }
+
+    public ConcurrentLinkedQueue<DataSnapshot> getSuggestions() {
+        return suggestions;
+    }
+
+    public void clearSuggestions() throws InterruptedException {
+        suggestions.clear();
+        syncClear("suggestions");
     }
 }

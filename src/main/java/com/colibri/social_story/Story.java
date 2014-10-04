@@ -3,9 +3,8 @@ package com.colibri.social_story;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class Story {
@@ -39,15 +38,35 @@ public class Story {
         Map<String, Object> mp = new HashMap<>();
         mp.put("started", "true");
         mp.put("phase", "suggestion");
-        System.out.println(sb.getServerOffsetMillis());
         mp.put("time_started", Long.toString(sb.getServerOffsetMillis()));
         sb.syncSet("attributes", mp);
 
-        end();
+        // add the handleers
+        sb.addSuggestionListener("suggestions");
+
+
+        Timer timer = new Timer();
+        while (true) {
+            Thread.sleep(2000);
+            suggestionEnd();
+            Thread.sleep(2000);
+            voteEnd();
+            roundEnd();
+        }
+
+        // end();
     }
 
-    private void suggestionEnd() {
+    private void suggestionEnd() throws InterruptedException {
+        System.out.println("Suggestion end");
+        ConcurrentLinkedQueue<DataSnapshot> suggestions = sb.getSuggestions();
 
+        for (DataSnapshot ds : suggestions) {
+            System.out.println(ds.getValue() + " " + ds.getName());
+            // TODO do something useful
+        }
+
+        sb.clearSuggestions();
     }
 
     private void voteEnd() {
