@@ -34,7 +34,7 @@ public class FirebaseUtils {
 
     static void syncWrite(final Firebase fb, Map<String, String> message) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
-        fb.push().setValue(message new Firebase.CompletionListener() {
+        fb.push().setValue(new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 done.countDown();
