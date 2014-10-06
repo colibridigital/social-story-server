@@ -11,13 +11,9 @@ public class App {
         (new App()).run();
     }
 
-    // Waits for a few messages, prints IDK, removes all messages and exits
     public void run() throws InterruptedException {
-        final Firebase fb = new Firebase(FB_URL);
-
-        StoryRoom story = new StoryRoom(1, fb);
+        StoryRoom story = new StoryRoom(1, new FirebaseStoryBase(new Firebase(FB_URL)));
         story.connect();
-
     }
 }
 
