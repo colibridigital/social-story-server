@@ -7,7 +7,7 @@ public class Votes {
     //Word: Username (who suggested the word): Num Votes
     private Set<ScoredWord> words = new HashSet<>();
 
-    private void addWord(User user, String word) {
+    public void addWord(User user, String word) {
         ScoredWord thisWord = new ScoredWord();
         thisWord.setUser(user);
         thisWord.setWord(word);

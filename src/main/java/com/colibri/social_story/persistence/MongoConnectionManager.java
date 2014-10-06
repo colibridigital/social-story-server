@@ -28,7 +28,7 @@ public final class MongoConnectionManager {
 				morphia.map(cn);
 			}
 			
-			db = morphia.createDatastore(m, "ToRead");
+			db = morphia.createDatastore(m, "SocialStory");
 			db.ensureIndexes();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
