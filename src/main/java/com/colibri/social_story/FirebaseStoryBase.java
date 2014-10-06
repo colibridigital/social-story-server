@@ -22,12 +22,7 @@ public class FirebaseStoryBase implements StoryBase {
     @Override
     public void syncClear(String path) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).removeValue(new Firebase.CompletionListener() {
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                done.countDown();
-            }
-        });
+        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
         done.await();
     }
 
@@ -53,12 +48,7 @@ public class FirebaseStoryBase implements StoryBase {
 
     public void syncSet(String path, Map<String, Object> message) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).setValue(message, new Firebase.CompletionListener() {
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                done.countDown();
-            }
-        });
+        fb.child(path).setValue(message,  new ReleaseLatchCompletionListener(done));
         done.await();
     }
 
@@ -74,12 +64,7 @@ public class FirebaseStoryBase implements StoryBase {
 
     void syncPush(Map<String, String> message) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
-        fb.push().setValue(message, new Firebase.CompletionListener() {
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                done.countDown();
-            }
-        });
+        fb.push().setValue(message, new ReleaseLatchCompletionListener(done));
         done.await();
     }
 
@@ -130,5 +115,18 @@ public class FirebaseStoryBase implements StoryBase {
     @Override
     public ConcurrentLinkedQueue<DataSnapshot> getVotes() {
         return votes;
+    }
+
+    private static class ReleaseLatchCompletionListener implements Firebase.CompletionListener {
+        private final CountDownLatch done;
+
+        public ReleaseLatchCompletionListener(CountDownLatch done) {
+            this.done = done;
+        }
+
+        @Override
+        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+            done.countDown();
+        }
     }
 }
