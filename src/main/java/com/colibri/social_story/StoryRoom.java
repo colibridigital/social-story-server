@@ -1,25 +1,23 @@
 package com.colibri.social_story;
 
 import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class StoryRoom {
 
     private String story = "My big story";
-    private final StoryBase sb;
+    private final FirebaseStoryBase sb;
     private int users = 0;
     private int minUsers;
 
     private static final int SUGGEST_TIME = 30 * 1000;
     private static final int VOTE_TIME = 30 * 1000;
 
-    public StoryRoom(int minUsers, Firebase fb) {
+    public StoryRoom(int minUsers, FirebaseStoryBase sb) {
         this.minUsers = minUsers;
-        this.sb = new StoryBase(fb);
+        this.sb = sb;
     }
 
     // wait for min users and start
