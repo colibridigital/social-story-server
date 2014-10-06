@@ -31,10 +31,6 @@ public class FirebaseStoryBase implements StoryBase {
         done.await();
     }
 
-    public Firebase child(String path) {
-        return fb.child(path);
-    }
-
     public void addSuggestionListener(String path)
             throws InterruptedException {
         fb.child(path).addChildEventListener(new FirebaseChildEventListenerAdapter() {
@@ -63,6 +59,16 @@ public class FirebaseStoryBase implements StoryBase {
                 done.countDown();
             }
         });
+        done.await();
+    }
+
+    public void waitForMinUsers(int users) throws InterruptedException {
+        final CountDownLatch done = new CountDownLatch(users);
+        fb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                done.countDown();
+            }});
         done.await();
     }
 

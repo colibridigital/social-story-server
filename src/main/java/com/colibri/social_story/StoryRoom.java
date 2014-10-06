@@ -3,51 +3,50 @@ package com.colibri.social_story;
 import com.firebase.client.DataSnapshot;
 
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 public class StoryRoom {
 
+    private final int voteTime;
+    private final int suggestTime;
+    private final int nRounds;
     private String story = "My big story";
     private final StoryBase sb;
     private int users = 0;
     private int minUsers;
 
-    private static final int SUGGEST_TIME = 30 * 1000;
-    private static final int VOTE_TIME = 30 * 1000;
-
-    public StoryRoom(int minUsers, StoryBase sb) {
+    public StoryRoom(int minUsers, StoryBase sb,
+                     int suggestTime, int voteTime,
+                     int nRounds) {
         this.minUsers = minUsers;
         this.sb = sb;
+        this.suggestTime = suggestTime;
+        this.voteTime = voteTime;
+        this.nRounds = nRounds;
     }
 
-    // wait for min users and start
     void connect() throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(this.minUsers);
-        sb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                done.countDown();
-        }});
-
-        done.await();
-
-        addUser();
+        sb.waitForMinUsers(this.minUsers);
+        start();
     }
 
     private void start() throws InterruptedException {
-        sb.setSuggestPhase();
         sb.addSuggestionListener("suggestions");
         sb.addVoteListener("votes");
 
-        while (true) {
-            Thread.sleep(SUGGEST_TIME);
+        sb.setSuggestPhase();
+
+        int r = 0;
+        boolean finish = false;
+        while (!finish && r < nRounds) {
+            Thread.sleep(suggestTime);
             suggestionEnd();
-            Thread.sleep(VOTE_TIME);
-            voteEnd();
+            Thread.sleep(voteTime);
+            finish = voteEnd();
             roundEnd();
+            r++;
         }
 
-        // end();
+        end();
     }
 
     private void suggestionEnd() throws InterruptedException {
@@ -63,15 +62,17 @@ public class StoryRoom {
         sb.setVotePhase();
     }
 
-    private void voteEnd() throws InterruptedException {
+    private boolean voteEnd() throws InterruptedException {
         Map<String, Object> m = new HashMap<>();
         DataSnapshot ds = sb.getVotes().peek();
         if (ds != null) {
             story = story + ds.getValue();
             m.put("story", story);
             sb.syncSet("", m);
+            return "End".equals(ds.getValue());
         }
         sb.clearVotes();
+        return false;
     }
 
     private void roundEnd() throws InterruptedException {
@@ -81,15 +82,6 @@ public class StoryRoom {
     private void end() {
         System.out.println("Story end");
     }
-
-    private void addUser() throws InterruptedException {
-        System.out.println("User registered");
-        users++;
-        if (users >= this.minUsers) {
-            start();
-        }
-    }
-
 }
 
 

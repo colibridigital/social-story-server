@@ -27,7 +27,7 @@ public interface StoryBase {
 
     void addVoteListener(String votes) throws InterruptedException;
 
-    Query child(String users);
-
     public void syncSet(String words, Map<String, Object> m) throws InterruptedException;
+
+    public void waitForMinUsers(int users) throws InterruptedException;
 }
