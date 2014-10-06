@@ -1,7 +1,7 @@
 package com.colibri.social_story;
 
+// TODO(paul-g): remove dependency on DS
 import com.firebase.client.DataSnapshot;
-import com.firebase.client.Query;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -27,7 +27,7 @@ public interface StoryBase {
 
     void addVoteListener(String votes) throws InterruptedException;
 
-    public void syncSet(String words, Map<String, Object> m) throws InterruptedException;
+    void syncSet(String words, Map<String, Object> m) throws InterruptedException;
 
-    public void waitForMinUsers(int users) throws InterruptedException;
+    void waitForMinUsers(int users) throws InterruptedException;
 }

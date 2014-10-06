@@ -11,7 +11,6 @@ public class StoryRoom {
     private final int nRounds;
     private String story = "My big story";
     private final StoryBase sb;
-    private int users = 0;
     private int minUsers;
 
     public StoryRoom(int minUsers, StoryBase sb,
