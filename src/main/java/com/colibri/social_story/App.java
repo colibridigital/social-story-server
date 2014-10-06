@@ -2,9 +2,6 @@ package com.colibri.social_story;
 
 import com.firebase.client.Firebase;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class App {
 
     public static final String FB_URL = "https://colibristory.firebaseio.com/social-story/1";
@@ -18,7 +15,7 @@ public class App {
     public void run() throws InterruptedException {
         final Firebase fb = new Firebase(FB_URL);
 
-        Story story = new Story(1, fb);
+        StoryRoom story = new StoryRoom(1, fb);
         story.connect();
 
     }

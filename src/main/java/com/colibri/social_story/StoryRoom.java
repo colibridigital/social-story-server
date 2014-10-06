@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
-public class Story {
+public class StoryRoom {
 
     private String story = "My big story";
     private final StoryBase sb;
@@ -17,7 +17,7 @@ public class Story {
     private static final int SUGGEST_TIME = 30 * 1000;
     private static final int VOTE_TIME = 30 * 1000;
 
-    public Story(int minUsers, Firebase fb) {
+    public StoryRoom(int minUsers, Firebase fb) {
         this.minUsers = minUsers;
         this.sb = new StoryBase(fb);
     }
