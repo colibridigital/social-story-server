@@ -31,11 +31,11 @@ public class FirebaseStoryBase implements StoryBase {
         done.await();
     }
 
-    Firebase child(String path) {
+    public Firebase child(String path) {
         return fb.child(path);
     }
 
-    void addSuggestionListener(String path)
+    public void addSuggestionListener(String path)
             throws InterruptedException {
         fb.child(path).addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
@@ -45,7 +45,7 @@ public class FirebaseStoryBase implements StoryBase {
         });
     }
 
-    void addVoteListener(String path)
+    public void addVoteListener(String path)
             throws InterruptedException {
         fb.child(path).addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
@@ -55,7 +55,7 @@ public class FirebaseStoryBase implements StoryBase {
         });
     }
 
-    void syncSet(String path, Map<String, Object> message) throws InterruptedException {
+    public void syncSet(String path, Map<String, Object> message) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
         fb.child(path).setValue(message, new Firebase.CompletionListener() {
             @Override

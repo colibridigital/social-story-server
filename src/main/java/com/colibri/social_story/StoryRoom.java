@@ -8,14 +8,14 @@ import java.util.concurrent.CountDownLatch;
 public class StoryRoom {
 
     private String story = "My big story";
-    private final FirebaseStoryBase sb;
+    private final StoryBase sb;
     private int users = 0;
     private int minUsers;
 
     private static final int SUGGEST_TIME = 30 * 1000;
     private static final int VOTE_TIME = 30 * 1000;
 
-    public StoryRoom(int minUsers, FirebaseStoryBase sb) {
+    public StoryRoom(int minUsers, StoryBase sb) {
         this.minUsers = minUsers;
         this.sb = sb;
     }
