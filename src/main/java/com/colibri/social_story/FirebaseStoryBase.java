@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.User;
 import com.firebase.client.*;
 
 import java.util.Date;
@@ -48,18 +49,17 @@ public class FirebaseStoryBase implements StoryBase {
 
     public void syncSet(String path, Map<String, Object> message) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).setValue(message,  new ReleaseLatchCompletionListener(done));
+        fb.child(path).setValue(message, new ReleaseLatchCompletionListener(done));
         done.await();
     }
 
-    public void waitForMinUsers(int users) throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(users);
+    @Override
+    public void onUserAdded(final StoryBaseCallback storyBaseCallback) {
         fb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                done.countDown();
+                storyBaseCallback.handle(new User(dataSnapshot.getName()));
             }});
-        done.await();
     }
 
     void syncPush(Map<String, String> message) throws InterruptedException {

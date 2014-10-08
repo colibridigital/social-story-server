@@ -1,8 +1,10 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.User;
 import com.firebase.client.DataSnapshot;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 public class StoryRoom {
 
@@ -12,6 +14,7 @@ public class StoryRoom {
     private String story = "My big story";
     private final StoryBase sb;
     private int minUsers;
+    private int users = 0;
 
     public StoryRoom(int minUsers, StoryBase sb,
                      int suggestTime, int voteTime,
@@ -24,7 +27,16 @@ public class StoryRoom {
     }
 
     void connect() throws InterruptedException {
-        sb.waitForMinUsers(this.minUsers);
+        final CountDownLatch done = new CountDownLatch(this.minUsers);
+        sb.onUserAdded(new StoryBaseCallback<User>() {
+                           @Override
+                           public void handle(User u) {
+                               // TODO do something user
+                               done.countDown();
+                           }
+                       }
+        );
+        done.await();
         start();
     }
 

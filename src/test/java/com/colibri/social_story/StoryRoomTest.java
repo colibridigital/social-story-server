@@ -76,4 +76,9 @@ class MockStoryBase implements StoryBase {
     public void waitForMinUsers(int users) throws InterruptedException {
 
     }
+
+    @Override
+    public void onUserAdded(StoryBaseCallback storyBaseCallback) {
+
+    }
 }

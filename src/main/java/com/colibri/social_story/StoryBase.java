@@ -29,5 +29,5 @@ public interface StoryBase {
 
     void syncSet(String words, Map<String, Object> m) throws InterruptedException;
 
-    void waitForMinUsers(int users) throws InterruptedException;
+    void onUserAdded(final StoryBaseCallback storyBaseCallback);
 }
