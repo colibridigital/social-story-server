@@ -9,6 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class StoryRoom {
 
+    private final String title = "My title";
     private final int voteTime;
     private final int suggestTime;
     private final int nRounds;
@@ -55,8 +56,8 @@ public class StoryRoom {
         sb.onWordAdded(new StoryBaseCallback<Suggestion>() {
             @Override
             public void handle(Suggestion s) {
-                roundSuggestions.addSuggestion(s.getUser(), s.getValue());
-                StoryRoom.this.addSuggestion(s);
+                System.out.println("Add suggestion");
+                roundSuggestions.addSuggestion(s.getUser(), s.getWord());
             }
         });
 
@@ -64,19 +65,11 @@ public class StoryRoom {
         sb.onVotesAdded( new StoryBaseCallback<Vote>() {
             @Override
             public void handle(Vote vote) {
+                System.out.println("Add vote");
                 roundVotes.voteForWord(vote.getWord(), vote.getUser());
             }
         });
         start();
-    }
-
-    private void addSuggestion(Suggestion s) {
-        Suggestions ss = suggestions.peek();
-        if (ss == null) {
-            ss = new Suggestions();
-            suggestions.add(ss);
-        }
-        ss.addSuggestion(s.getUser(), s.getValue());
     }
 
     private void start() throws InterruptedException {
@@ -96,6 +89,7 @@ public class StoryRoom {
             Thread.sleep(voteTime);
             finish = voteEnd();
             r++;
+            sb.removeStory();
         }
 
         end();
@@ -109,6 +103,7 @@ public class StoryRoom {
     }
 
     private boolean voteEnd() throws InterruptedException {
+        System.out.println("Vote end");
         ScoredWord sw = roundVotes.pickWinner();
         if (sw == null)
             return false;
@@ -140,6 +135,10 @@ public class StoryRoom {
 
     public String getStory() {
         return story;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public enum Phase {

@@ -7,7 +7,6 @@ public class Suggestion {
 
     private String word;
     private User user;
-    private String value;
 
     public Suggestion(User user, String word) {
         this.word = word;
@@ -18,7 +17,7 @@ public class Suggestion {
         return user;
     }
 
-    public String getValue() {
-        return value;
+    public String getWord() {
+        return word;
     }
 }
