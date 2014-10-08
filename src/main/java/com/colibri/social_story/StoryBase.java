@@ -23,10 +23,6 @@ public interface StoryBase {
 
     ConcurrentLinkedQueue<DataSnapshot> getSuggestions();
 
-    void addSuggestionListener(String suggestions) throws InterruptedException;
-
-    void addVoteListener(String votes) throws InterruptedException;
-
     void syncSet(String words, Map<String, Object> m) throws InterruptedException;
 
     void onUserAdded(final StoryBaseCallback storyBaseCallback);

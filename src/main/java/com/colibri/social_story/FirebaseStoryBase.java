@@ -18,18 +18,16 @@ public class FirebaseStoryBase implements StoryBase {
 
     public FirebaseStoryBase(Firebase fb) {
         this.fb = fb;
-    }
 
-    @Override
-    public void syncClear(String path) throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
-        done.await();
-    }
+        // add the listeners
+        fb.child("votes").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                votes.add(dataSnapshot);
+            }
+        });
 
-    public void addSuggestionListener(String path)
-            throws InterruptedException {
-        fb.child(path).addChildEventListener(new FirebaseChildEventListenerAdapter() {
+        fb.child("suggestions").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 suggestions.add(dataSnapshot);
@@ -37,14 +35,11 @@ public class FirebaseStoryBase implements StoryBase {
         });
     }
 
-    public void addVoteListener(String path)
-            throws InterruptedException {
-        fb.child(path).addChildEventListener(new FirebaseChildEventListenerAdapter() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                votes.add(dataSnapshot);
-            }
-        });
+    @Override
+    public void syncClear(String path) throws InterruptedException {
+        final CountDownLatch done = new CountDownLatch(1);
+        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
+        done.await();
     }
 
     public void syncSet(String path, Map<String, Object> message) throws InterruptedException {

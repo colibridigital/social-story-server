@@ -58,22 +58,7 @@ class MockStoryBase implements StoryBase {
     }
 
     @Override
-    public void addSuggestionListener(String suggestions) throws InterruptedException {
-
-    }
-
-    @Override
-    public void addVoteListener(String votes) throws InterruptedException {
-
-    }
-
-    @Override
     public void syncSet(String words, Map<String, Object> m) throws InterruptedException {
-
-    }
-
-    @Override
-    public void waitForMinUsers(int users) throws InterruptedException {
 
     }
 

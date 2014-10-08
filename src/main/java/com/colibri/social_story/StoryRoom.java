@@ -41,9 +41,6 @@ public class StoryRoom {
     }
 
     private void start() throws InterruptedException {
-        sb.addSuggestionListener("suggestions");
-        sb.addVoteListener("votes");
-
         sb.setSuggestPhase();
 
         int r = 0;
