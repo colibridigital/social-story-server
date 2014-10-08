@@ -14,7 +14,7 @@ public interface StoryBase {
 
     void writeVotes(Votes v) throws InterruptedException;
 
-    void writeStoryAttributes(StoryRoom story);
+    void writeStoryAttributes(Story story);
 
     void removeStory();
 }

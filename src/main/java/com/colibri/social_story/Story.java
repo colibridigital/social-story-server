@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 @Data
-public class StoryRoom {
+public class Story {
 
     private final String title = "My title";
     private final int voteTime;
@@ -33,9 +33,9 @@ public class StoryRoom {
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Votes roundVotes;
 
-    public StoryRoom(int minUsers, StoryBase sb,
-                     int suggestTime, int voteTime,
-                     int nRounds) {
+    public Story(int minUsers, StoryBase sb,
+                 int suggestTime, int voteTime,
+                 int nRounds) {
         this.minUsers = minUsers;
         this.sb = sb;
         this.suggestTime = suggestTime;

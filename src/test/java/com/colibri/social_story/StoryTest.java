@@ -3,10 +3,10 @@ package com.colibri.social_story;
 import com.colibri.social_story.entities.Votes;
 import junit.framework.TestCase;
 
-public class StoryRoomTest extends TestCase {
+public class StoryTest extends TestCase {
 
     public void testConnect() throws Exception {
-        StoryRoom sr = new StoryRoom(0, new MockStoryBase(), 0, 0, 2);
+        Story sr = new Story(0, new MockStoryBase(), 0, 0, 2);
         sr.connect();
     }
 }
@@ -19,7 +19,7 @@ class MockStoryBase implements StoryBase {
     }
 
     @Override
-    public void writeStoryAttributes(StoryRoom story) {
+    public void writeStoryAttributes(Story story) {
 
     }
 

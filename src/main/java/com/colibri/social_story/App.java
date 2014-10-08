@@ -15,7 +15,7 @@ public class App {
     }
 
     public void run() throws InterruptedException {
-        StoryRoom story = new StoryRoom(1,
+        Story story = new Story(1,
                 new FirebaseStoryBase(new Firebase(FB_URL)),
                 DEFAULT_SUGGEST_TIME,
                 DEFAULT_VOTE_TIME,
