@@ -7,9 +7,7 @@ import junit.framework.TestCase;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Unit test for simple App.
- */
+
 public class AppTest extends TestCase {
 
     private static class SimpleClient extends TimerTask {
