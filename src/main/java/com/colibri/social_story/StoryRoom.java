@@ -2,6 +2,8 @@ package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
@@ -13,13 +15,13 @@ public class StoryRoom {
     private String story = "My big story";
     private final StoryBase sb;
     private int minUsers;
-    private int users = 0;
     private Phase phase;
     private long timeStarted;
     private long phaseStarted;
 
     private Suggestions roundSuggestions;
 
+    private List<User> users = new ArrayList<>();
     final ConcurrentLinkedQueue<Suggestions> suggestions = new ConcurrentLinkedQueue<>();
     final ConcurrentLinkedQueue<Votes> votes = new ConcurrentLinkedQueue<>();
     private Votes roundVotes;
@@ -40,6 +42,8 @@ public class StoryRoom {
                            @Override
                            public void handle(User u) {
                                // TODO do something user
+                               users.add(u);
+                               System.out.println("Added users");
                                done.countDown();
                            }
                        }
