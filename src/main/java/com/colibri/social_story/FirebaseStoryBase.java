@@ -6,7 +6,6 @@ import com.firebase.client.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseStoryBase implements StoryBase {
@@ -15,12 +14,6 @@ public class FirebaseStoryBase implements StoryBase {
 
     public FirebaseStoryBase(Firebase fb) {
         this.fb = fb;
-    }
-
-    public void syncClear(String path) throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
-        done.await();
     }
 
     public void syncSet(String path, Map<String, Object> message) throws InterruptedException {

@@ -1,9 +1,7 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
-import com.firebase.client.DataSnapshot;
 
-import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
