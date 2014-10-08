@@ -1,6 +1,7 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
+import com.colibri.social_story.utils.Pair;
 import com.firebase.client.*;
 
 import java.util.Date;
@@ -27,7 +28,7 @@ public class FirebaseStoryBase implements StoryBase {
         fb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                storyBaseCallback.handle(User.newInstance(dataSnapshot.getName()));
+                storyBaseCallback.handle(dataSnapshot.getName());
             }});
     }
 
@@ -36,9 +37,9 @@ public class FirebaseStoryBase implements StoryBase {
         fb.child("suggestions").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                storyBaseCallback.handle(new Suggestion(
-                        User.newInstance(dataSnapshot.getName()),
-                        (String)dataSnapshot.getValue()));
+                storyBaseCallback.handle(
+                        new Pair<>(dataSnapshot.getName(),
+                                   dataSnapshot.getValue()));
             }
         });
     }
@@ -48,9 +49,9 @@ public class FirebaseStoryBase implements StoryBase {
         fb.child("votes").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                storyBaseCallback.handle(new Vote(
-                        User.newInstance(dataSnapshot.getName()),
-                        (String)dataSnapshot.getValue()));
+                storyBaseCallback.handle(
+                        new Pair<>(dataSnapshot.getName(),
+                                   dataSnapshot.getValue()));
             }
         });
     }

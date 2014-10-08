@@ -1,13 +1,14 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
+import com.colibri.social_story.utils.Pair;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
@@ -24,7 +25,9 @@ public class Story extends AbstractStory{
     private long timeStarted;
     private long phaseStarted;
     private String story = "My big story";
-    final private List<User> users = new ArrayList<>();
+
+    private static Map<String, User> userMap = new HashMap<>();
+
     final private ConcurrentLinkedQueue<Suggestions> suggestions = new ConcurrentLinkedQueue<>();
     final private ConcurrentLinkedQueue<Votes> votes = new ConcurrentLinkedQueue<>();
 
@@ -45,12 +48,12 @@ public class Story extends AbstractStory{
 
     public boolean connect() throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(this.minUsers);
-        sb.onUserAdded(new StoryBaseCallback<User>() {
+        sb.onUserAdded(new StoryBaseCallback<String>() {
                            @Override
-                           public void handle(User u) {
+                           public void handle(String username) {
                                // TODO do something user
-                               users.add(u);
-                               System.out.println("Added users");
+                               userMap.put(username, new User(username));
+                               System.out.println("Added user" + username);
                                done.countDown();
                            }
                        }
@@ -59,19 +62,19 @@ public class Story extends AbstractStory{
 
         // setup callback
         roundSuggestions = new Suggestions();
-        sb.onWordAdded(new StoryBaseCallback<Suggestion>() {
+        sb.onWordAdded(new StoryBaseCallback<Pair<String, String>>() {
             @Override
-            public void handle(Suggestion s) {
+            public void handle(Pair<String, String> s) {
                 System.out.println("Add suggestion");
-                roundSuggestions.addSuggestion(s.getUser(), s.getWord());
+                roundSuggestions.addSuggestion(userMap.get(s.fst), s.snd);
             }
         });
 
-        sb.onVotesAdded( new StoryBaseCallback<Vote>() {
+        sb.onVotesAdded(new StoryBaseCallback<Pair<String, String>>() {
             @Override
-            public void handle(Vote vote) {
+            public void handle(Pair<String, String> vote) {
                 System.out.println("Add vote");
-                roundVotes.voteForWord(vote.getWord(), vote.getUser());
+                roundVotes.voteForWord(vote.snd, userMap.get(vote.fst));
             }
         });
         start();
