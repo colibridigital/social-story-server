@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 @Data
-public class Story {
+public class Story extends AbstractStory{
 
     private final String title = "My title";
     private final int voteTime;
@@ -43,7 +43,7 @@ public class Story {
         this.nRounds = nRounds;
     }
 
-    void connect() throws InterruptedException {
+    public boolean connect() throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(this.minUsers);
         sb.onUserAdded(new StoryBaseCallback<User>() {
                            @Override
@@ -75,6 +75,8 @@ public class Story {
             }
         });
         start();
+
+        return true;
     }
 
     private void start() throws InterruptedException {

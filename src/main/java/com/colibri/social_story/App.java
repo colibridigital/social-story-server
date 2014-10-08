@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.persistence.StoryDAO;
 import com.firebase.client.Firebase;
 
 public class App {
@@ -8,7 +9,7 @@ public class App {
 
     private static final int DEFAULT_SUGGEST_TIME = 30 * 1000;
     private static final int DEFAULT_VOTE_TIME = 30 * 1000;
-    private static final int N_ROUNDS = 30;
+    private static final int N_ROUNDS = 1;
 
     public static void main(String[] args) throws InterruptedException {
         (new App()).run();
@@ -21,7 +22,12 @@ public class App {
                 DEFAULT_VOTE_TIME,
                 N_ROUNDS
                 );
+
         story.connect();
+
+        //TODO Fix class mappings
+//        StoryDAO storyDAO = new StoryDAO();
+//        storyDAO.save(story);
     }
 }
 
