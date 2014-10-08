@@ -35,7 +35,6 @@ public class FirebaseStoryBase implements StoryBase {
         });
     }
 
-    @Override
     public void syncClear(String path) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
         fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
@@ -85,16 +84,6 @@ public class FirebaseStoryBase implements StoryBase {
     public void clearVotes() throws InterruptedException {
         votes.clear();
         syncClear("votes");
-    }
-
-    private void setPhase(String phase) throws InterruptedException {
-        Map<String, Object> mp = new HashMap<>();
-        mp.put("started", "true");
-        mp.put("phase", phase);
-        mp.put("time_story_started",
-                timeStarted = (timeStarted == null ? getServerOffsetMillis() : timeStarted));
-        mp.put("time_phase_started", getServerOffsetMillis());
-        syncSet("attributes", mp);
     }
 
     public void writeStoryAttributes(StoryRoom story) {

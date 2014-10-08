@@ -1,7 +1,6 @@
 package com.colibri.social_story;
 
 import com.firebase.client.DataSnapshot;
-import com.firebase.client.Query;
 import junit.framework.TestCase;
 
 import java.util.Map;
@@ -16,11 +15,6 @@ public class StoryRoomTest extends TestCase {
 }
 
 class MockStoryBase implements StoryBase {
-
-    @Override
-    public void syncClear(String path) throws InterruptedException {
-
-    }
 
     @Override
     public long getServerOffsetMillis() throws InterruptedException {
