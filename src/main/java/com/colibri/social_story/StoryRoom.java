@@ -1,6 +1,7 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.User;
+import com.colibri.social_story.entities.Votes;
 import com.firebase.client.DataSnapshot;
 
 import java.util.*;
@@ -15,6 +16,10 @@ public class StoryRoom {
     private final StoryBase sb;
     private int minUsers;
     private int users = 0;
+    private Phase phase;
+    private long timeStarted;
+    private long timePhaseStarted;
+    private long phaseStarted;
 
     public StoryRoom(int minUsers, StoryBase sb,
                      int suggestTime, int voteTime,
@@ -41,16 +46,21 @@ public class StoryRoom {
     }
 
     private void start() throws InterruptedException {
-        sb.setSuggestPhase();
 
+        timeStarted = sb.getServerOffsetMillis();
         int r = 0;
         boolean finish = false;
         while (!finish && r < nRounds) {
+            phase = Phase.SUGGEST;
+            phaseStarted = sb.getServerOffsetMillis();
+            sb.writeStoryAttributes(this);
             Thread.sleep(suggestTime);
             suggestionEnd();
+            phase = Phase.VOTE;
+            phaseStarted = sb.getServerOffsetMillis();
+            sb.writeStoryAttributes(this);
             Thread.sleep(voteTime);
             finish = voteEnd();
-            roundEnd();
             r++;
         }
 
@@ -67,7 +77,6 @@ public class StoryRoom {
         }
         sb.syncSet("words", m);
         sb.clearSuggestions();
-        sb.setVotePhase();
     }
 
     private boolean voteEnd() throws InterruptedException {
@@ -83,12 +92,28 @@ public class StoryRoom {
         return false;
     }
 
-    private void roundEnd() throws InterruptedException {
-        sb.setSuggestPhase();
-    }
-
     private void end() {
         System.out.println("Story end");
+    }
+
+    public long getStarted() {
+        return 0;
+    }
+
+    public Phase getPhase() {
+        return (Phase) phase;
+    }
+
+    public long getTimeStarted() {
+        return timeStarted;
+    }
+
+    public long getPhaseStarted() {
+        return phaseStarted;
+    }
+
+    public enum Phase {
+        VOTE, SUGGEST
     }
 }
 

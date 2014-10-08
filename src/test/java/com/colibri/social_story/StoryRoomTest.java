@@ -38,16 +38,6 @@ class MockStoryBase implements StoryBase {
     }
 
     @Override
-    public void setVotePhase() throws InterruptedException {
-
-    }
-
-    @Override
-    public void setSuggestPhase() throws InterruptedException {
-
-    }
-
-    @Override
     public ConcurrentLinkedQueue<DataSnapshot> getVotes() {
         return new ConcurrentLinkedQueue<>();
     }
@@ -55,6 +45,11 @@ class MockStoryBase implements StoryBase {
     @Override
     public ConcurrentLinkedQueue<DataSnapshot> getSuggestions() {
         return new ConcurrentLinkedQueue<>();
+    }
+
+    @Override
+    public void writeStoryAttributes(StoryRoom story) {
+
     }
 
     @Override

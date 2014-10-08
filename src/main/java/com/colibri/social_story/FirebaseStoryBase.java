@@ -87,16 +87,6 @@ public class FirebaseStoryBase implements StoryBase {
         syncClear("votes");
     }
 
-    @Override
-    public void setVotePhase() throws InterruptedException {
-        setPhase("vote");
-    }
-
-    @Override
-    public void setSuggestPhase() throws InterruptedException {
-        setPhase("suggest");
-    }
-
     private void setPhase(String phase) throws InterruptedException {
         Map<String, Object> mp = new HashMap<>();
         mp.put("started", "true");
@@ -105,6 +95,19 @@ public class FirebaseStoryBase implements StoryBase {
                 timeStarted = (timeStarted == null ? getServerOffsetMillis() : timeStarted));
         mp.put("time_phase_started", getServerOffsetMillis());
         syncSet("attributes", mp);
+    }
+
+    public void writeStoryAttributes(StoryRoom story) {
+        Map<String, Object> mp = new HashMap<>();
+        mp.put("started", story.getStarted());
+        mp.put("phase", story.getPhase());
+        mp.put("time_story_started", story.getTimeStarted());
+        mp.put("time_phase_started", story.getPhaseStarted());
+        try {
+            syncSet("attributes", mp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -124,4 +127,6 @@ public class FirebaseStoryBase implements StoryBase {
             done.countDown();
         }
     }
+
+
 }

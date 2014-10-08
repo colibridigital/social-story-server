@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface StoryBase {
-    void syncClear(String path) throws InterruptedException;
 
     long getServerOffsetMillis() throws InterruptedException;
 
@@ -15,13 +14,11 @@ public interface StoryBase {
 
     void clearVotes() throws InterruptedException;
 
-    void setVotePhase() throws InterruptedException;
-
-    void setSuggestPhase() throws InterruptedException;
-
     ConcurrentLinkedQueue<DataSnapshot> getVotes();
 
     ConcurrentLinkedQueue<DataSnapshot> getSuggestions();
+
+    void writeStoryAttributes(StoryRoom story);
 
     void syncSet(String words, Map<String, Object> m) throws InterruptedException;
 
