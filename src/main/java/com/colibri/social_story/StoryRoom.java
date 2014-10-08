@@ -61,7 +61,6 @@ public class StoryRoom {
             }
         });
 
-        roundVotes = new Votes();
         sb.onVotesAdded( new StoryBaseCallback<Vote>() {
             @Override
             public void handle(Vote vote) {
@@ -97,7 +96,8 @@ public class StoryRoom {
 
     private void suggestionEnd() throws InterruptedException {
         System.out.println("Suggestion end");
-        sb.writeVotes(roundSuggestions.getWordsForVote());
+        roundVotes = roundSuggestions.getWordsForVote();
+        sb.writeVotes(roundVotes);
         suggestions.add(roundSuggestions);
         roundSuggestions = new Suggestions();
     }
