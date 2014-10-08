@@ -1,6 +1,5 @@
 package com.colibri.social_story.entities;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import lombok.NonNull;
 
