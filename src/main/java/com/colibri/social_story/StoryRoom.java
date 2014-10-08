@@ -1,10 +1,10 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.entities.User;
-import com.colibri.social_story.entities.Votes;
+import com.colibri.social_story.entities.*;
 import com.firebase.client.DataSnapshot;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 public class StoryRoom {
@@ -20,6 +20,11 @@ public class StoryRoom {
     private long timeStarted;
     private long timePhaseStarted;
     private long phaseStarted;
+
+    private Suggestions roundSuggestions;
+
+    final ConcurrentLinkedQueue<Suggestions> suggestions = new ConcurrentLinkedQueue<>();
+    final ConcurrentLinkedQueue<Votes> votes = new ConcurrentLinkedQueue<>();
 
     public StoryRoom(int minUsers, StoryBase sb,
                      int suggestTime, int voteTime,
@@ -42,7 +47,26 @@ public class StoryRoom {
                        }
         );
         done.await();
+
+        // setup callback
+        roundSuggestions = new Suggestions();
+        sb.onWordAdded(new StoryBaseCallback<Suggestion>() {
+            @Override
+            public void handle(Suggestion s) {
+                roundSuggestions.addSuggestion(s.getUser(), s.getValue());
+                StoryRoom.this.addSuggestion(s);
+            }
+        });
         start();
+    }
+
+    private void addSuggestion(Suggestion s) {
+        Suggestions ss = suggestions.peek();
+        if (ss == null) {
+            ss = new Suggestions();
+            suggestions.add(ss);
+        }
+        ss.addSuggestion(s.getUser(), s.getValue());
     }
 
     private void start() throws InterruptedException {
@@ -69,14 +93,9 @@ public class StoryRoom {
 
     private void suggestionEnd() throws InterruptedException {
         System.out.println("Suggestion end");
-
-        Map<String, Object> m = new HashMap<>();
-        for (DataSnapshot ds : sb.getSuggestions()) {
-            System.out.println(ds.getValue() + " " + ds.getName());
-            m.put((String)ds.getValue(), ds.getName());
-        }
-        sb.syncSet("words", m);
-        sb.clearSuggestions();
+        sb.writeVotes(roundSuggestions.getWordsForVote());
+        suggestions.add(roundSuggestions);
+        roundSuggestions = new Suggestions();
     }
 
     private boolean voteEnd() throws InterruptedException {
@@ -101,7 +120,7 @@ public class StoryRoom {
     }
 
     public Phase getPhase() {
-        return (Phase) phase;
+        return phase;
     }
 
     public long getTimeStarted() {

@@ -13,7 +13,7 @@ public class StoryInstance {
     private List<Votes> votesList = new ArrayList<>();
 
     public void addUser(String user) {
-        userList.add(new User(user));
+        userList.add(User.newInstance(user));
     }
 
     public Votes getVoteWords(Suggestions roundSuggestions) {

@@ -36,4 +36,8 @@ public class Votes {
 
         return highScore;
     }
+
+    public Set<ScoredWord> getWords() {
+        return new HashSet<>(words);
+    }
 }

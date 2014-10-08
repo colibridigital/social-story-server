@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.Votes;
 import com.firebase.client.DataSnapshot;
 import junit.framework.TestCase;
 
@@ -22,22 +23,12 @@ class MockStoryBase implements StoryBase {
     }
 
     @Override
-    public void clearSuggestions() throws InterruptedException {
-
-    }
-
-    @Override
     public void clearVotes() throws InterruptedException {
 
     }
 
     @Override
     public ConcurrentLinkedQueue<DataSnapshot> getVotes() {
-        return new ConcurrentLinkedQueue<>();
-    }
-
-    @Override
-    public ConcurrentLinkedQueue<DataSnapshot> getSuggestions() {
         return new ConcurrentLinkedQueue<>();
     }
 
@@ -53,6 +44,16 @@ class MockStoryBase implements StoryBase {
 
     @Override
     public void onUserAdded(StoryBaseCallback storyBaseCallback) {
+
+    }
+
+    @Override
+    public void onWordAdded(StoryBaseCallback storyBaseCallback) {
+
+    }
+
+    @Override
+    public void writeVotes(Votes v) throws InterruptedException {
 
     }
 }

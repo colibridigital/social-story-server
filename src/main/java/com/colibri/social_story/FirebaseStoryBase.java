@@ -1,6 +1,9 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.ScoredWord;
+import com.colibri.social_story.entities.Suggestion;
 import com.colibri.social_story.entities.User;
+import com.colibri.social_story.entities.Votes;
 import com.firebase.client.*;
 
 import java.util.Date;
@@ -12,7 +15,6 @@ import java.util.concurrent.CountDownLatch;
 public class FirebaseStoryBase implements StoryBase {
 
     private final Firebase fb;
-    final ConcurrentLinkedQueue<DataSnapshot> suggestions = new ConcurrentLinkedQueue<>();
     final ConcurrentLinkedQueue<DataSnapshot> votes = new ConcurrentLinkedQueue<>();
     private Long timeStarted = null;
 
@@ -24,13 +26,6 @@ public class FirebaseStoryBase implements StoryBase {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 votes.add(dataSnapshot);
-            }
-        });
-
-        fb.child("suggestions").addChildEventListener(new FirebaseChildEventListenerAdapter() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                suggestions.add(dataSnapshot);
             }
         });
     }
@@ -52,14 +47,28 @@ public class FirebaseStoryBase implements StoryBase {
         fb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                storyBaseCallback.handle(new User(dataSnapshot.getName()));
+                storyBaseCallback.handle(User.newInstance(dataSnapshot.getName()));
             }});
     }
 
-    void syncPush(Map<String, String> message) throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(1);
-        fb.push().setValue(message, new ReleaseLatchCompletionListener(done));
-        done.await();
+    @Override
+    public void onWordAdded(final StoryBaseCallback storyBaseCallback) {
+        fb.child("suggestions").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                storyBaseCallback.handle(new Suggestion(
+                        User.newInstance(dataSnapshot.getName()),
+                        (String)dataSnapshot.getValue()));
+            }
+        });
+    }
+
+    @Override
+    public void writeVotes(Votes v) throws InterruptedException {
+        Map<String, Object> m = new HashMap<>();
+        for (ScoredWord sw : v.getWords())
+            m.put(sw.getWord(), sw.getUser());
+        syncSet("words", m);
     }
 
     @Override
@@ -67,17 +76,6 @@ public class FirebaseStoryBase implements StoryBase {
         Date d = new Date();
         // return (Integer)syncReadMessage(".info/serverTimeOffset");
         return d.getTime();
-    }
-
-    @Override
-    public ConcurrentLinkedQueue<DataSnapshot> getSuggestions() {
-        return suggestions;
-    }
-
-    @Override
-    public void clearSuggestions() throws InterruptedException {
-        suggestions.clear();
-        syncClear("suggestions");
     }
 
     @Override
