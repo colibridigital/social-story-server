@@ -1,9 +1,6 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.entities.ScoredWord;
-import com.colibri.social_story.entities.Suggestion;
-import com.colibri.social_story.entities.User;
-import com.colibri.social_story.entities.Votes;
+import com.colibri.social_story.entities.*;
 import com.firebase.client.*;
 
 import java.util.Date;
@@ -15,19 +12,9 @@ import java.util.concurrent.CountDownLatch;
 public class FirebaseStoryBase implements StoryBase {
 
     private final Firebase fb;
-    final ConcurrentLinkedQueue<DataSnapshot> votes = new ConcurrentLinkedQueue<>();
-    private Long timeStarted = null;
 
     public FirebaseStoryBase(Firebase fb) {
         this.fb = fb;
-
-        // add the listeners
-        fb.child("votes").addChildEventListener(new FirebaseChildEventListenerAdapter() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                votes.add(dataSnapshot);
-            }
-        });
     }
 
     public void syncClear(String path) throws InterruptedException {
@@ -64,6 +51,18 @@ public class FirebaseStoryBase implements StoryBase {
     }
 
     @Override
+    public void onVotesAdded(final StoryBaseCallback storyBaseCallback) {
+        fb.child("votes").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                storyBaseCallback.handle(new Vote(
+                        User.newInstance(dataSnapshot.getName()),
+                        (String)dataSnapshot.getValue()));
+            }
+        });
+    }
+
+    @Override
     public void writeVotes(Votes v) throws InterruptedException {
         Map<String, Object> m = new HashMap<>();
         for (ScoredWord sw : v.getWords())
@@ -78,28 +77,18 @@ public class FirebaseStoryBase implements StoryBase {
         return d.getTime();
     }
 
-    @Override
-    public void clearVotes() throws InterruptedException {
-        votes.clear();
-        syncClear("votes");
-    }
-
     public void writeStoryAttributes(StoryRoom story) {
         Map<String, Object> mp = new HashMap<>();
         mp.put("started", story.getStarted());
         mp.put("phase", story.getPhase());
         mp.put("time_story_started", story.getTimeStarted());
         mp.put("time_phase_started", story.getPhaseStarted());
+        mp.put("story", story.getStory());
         try {
             syncSet("attributes", mp);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public ConcurrentLinkedQueue<DataSnapshot> getVotes() {
-        return votes;
     }
 
     private static class ReleaseLatchCompletionListener implements Firebase.CompletionListener {

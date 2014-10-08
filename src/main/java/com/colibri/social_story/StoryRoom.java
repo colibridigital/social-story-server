@@ -18,13 +18,13 @@ public class StoryRoom {
     private int users = 0;
     private Phase phase;
     private long timeStarted;
-    private long timePhaseStarted;
     private long phaseStarted;
 
     private Suggestions roundSuggestions;
 
     final ConcurrentLinkedQueue<Suggestions> suggestions = new ConcurrentLinkedQueue<>();
     final ConcurrentLinkedQueue<Votes> votes = new ConcurrentLinkedQueue<>();
+    private Votes roundVotes;
 
     public StoryRoom(int minUsers, StoryBase sb,
                      int suggestTime, int voteTime,
@@ -55,6 +55,14 @@ public class StoryRoom {
             public void handle(Suggestion s) {
                 roundSuggestions.addSuggestion(s.getUser(), s.getValue());
                 StoryRoom.this.addSuggestion(s);
+            }
+        });
+
+        roundVotes = new Votes();
+        sb.onVotesAdded( new StoryBaseCallback<Vote>() {
+            @Override
+            public void handle(Vote vote) {
+                roundVotes.voteForWord(vote.getWord(), vote.getUser());
             }
         });
         start();
@@ -99,16 +107,13 @@ public class StoryRoom {
     }
 
     private boolean voteEnd() throws InterruptedException {
-        Map<String, Object> m = new HashMap<>();
-        DataSnapshot ds = sb.getVotes().peek();
-        if (ds != null) {
-            story = story + ds.getValue();
-            m.put("story", story);
-            sb.syncSet("", m);
-            return "End".equals(ds.getValue());
-        }
-        sb.clearVotes();
-        return false;
+        ScoredWord sw = roundVotes.pickWinner();
+        if (sw == null)
+            return false;
+        story = story + sw.getWord();
+        votes.add(roundVotes);
+        roundVotes = new Votes();
+        return "End".equals(sw.getWord());
     }
 
     private void end() {
@@ -129,6 +134,10 @@ public class StoryRoom {
 
     public long getPhaseStarted() {
         return phaseStarted;
+    }
+
+    public String getStory() {
+        return story;
     }
 
     public enum Phase {

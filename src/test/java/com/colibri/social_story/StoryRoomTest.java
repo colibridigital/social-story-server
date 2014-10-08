@@ -1,11 +1,7 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.Votes;
-import com.firebase.client.DataSnapshot;
 import junit.framework.TestCase;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class StoryRoomTest extends TestCase {
 
@@ -23,22 +19,7 @@ class MockStoryBase implements StoryBase {
     }
 
     @Override
-    public void clearVotes() throws InterruptedException {
-
-    }
-
-    @Override
-    public ConcurrentLinkedQueue<DataSnapshot> getVotes() {
-        return new ConcurrentLinkedQueue<>();
-    }
-
-    @Override
     public void writeStoryAttributes(StoryRoom story) {
-
-    }
-
-    @Override
-    public void syncSet(String words, Map<String, Object> m) throws InterruptedException {
 
     }
 
@@ -49,6 +30,11 @@ class MockStoryBase implements StoryBase {
 
     @Override
     public void onWordAdded(StoryBaseCallback storyBaseCallback) {
+
+    }
+
+    @Override
+    public void onVotesAdded(StoryBaseCallback storyBaseCallback) {
 
     }
 
