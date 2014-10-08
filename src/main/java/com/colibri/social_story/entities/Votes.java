@@ -11,6 +11,7 @@ public class Votes {
         ScoredWord thisWord = new ScoredWord();
         thisWord.setUser(user);
         thisWord.setWord(word);
+        words.add(thisWord);
     }
 
     public void voteForWord(String word, User user) {
