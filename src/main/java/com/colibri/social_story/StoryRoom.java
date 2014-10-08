@@ -1,30 +1,36 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
+@Data
 public class StoryRoom {
 
     private final String title = "My title";
     private final int voteTime;
     private final int suggestTime;
     private final int nRounds;
-    private String story = "My big story";
     private final StoryBase sb;
     private int minUsers;
     private Phase phase;
     private long timeStarted;
     private long phaseStarted;
+    private String story = "My big story";
+    final private List<User> users = new ArrayList<>();
+    final private ConcurrentLinkedQueue<Suggestions> suggestions = new ConcurrentLinkedQueue<>();
+    final private ConcurrentLinkedQueue<Votes> votes = new ConcurrentLinkedQueue<>();
 
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Suggestions roundSuggestions;
-
-    private List<User> users = new ArrayList<>();
-    final ConcurrentLinkedQueue<Suggestions> suggestions = new ConcurrentLinkedQueue<>();
-    final ConcurrentLinkedQueue<Votes> votes = new ConcurrentLinkedQueue<>();
+    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Votes roundVotes;
 
     public StoryRoom(int minUsers, StoryBase sb,
@@ -115,30 +121,6 @@ public class StoryRoom {
 
     private void end() {
         System.out.println("Story end");
-    }
-
-    public long getStarted() {
-        return 0;
-    }
-
-    public Phase getPhase() {
-        return phase;
-    }
-
-    public long getTimeStarted() {
-        return timeStarted;
-    }
-
-    public long getPhaseStarted() {
-        return phaseStarted;
-    }
-
-    public String getStory() {
-        return story;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public enum Phase {

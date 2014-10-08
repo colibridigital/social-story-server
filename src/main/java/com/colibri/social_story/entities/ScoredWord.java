@@ -11,12 +11,4 @@ public class ScoredWord {
     public void incrementScore() {
         score++;
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getWord() {
-        return word;
-    }
 }

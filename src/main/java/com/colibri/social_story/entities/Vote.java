@@ -1,18 +1,12 @@
 package com.colibri.social_story.entities;
 
+import lombok.Data;
+import lombok.NonNull;
+
+@Data
 public class Vote {
-    private String word;
+    @NonNull
     private User user;
-
-    public Vote(User user, String word) {
-        this.word = word;
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    public User getUser() {
-        return user;
-    }
+    @NonNull
+    private String word;
 }

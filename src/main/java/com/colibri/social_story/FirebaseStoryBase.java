@@ -73,7 +73,7 @@ public class FirebaseStoryBase implements StoryBase {
 
     public void writeStoryAttributes(StoryRoom story) {
         Map<String, Object> mp = new HashMap<>();
-        mp.put("started", story.getStarted());
+        mp.put("started", story.getTimeStarted());
         mp.put("phase", story.getPhase());
         mp.put("time_story_started", story.getTimeStarted());
         mp.put("time_phase_started", story.getPhaseStarted());

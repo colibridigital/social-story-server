@@ -1,23 +1,15 @@
 package com.colibri.social_story.entities;
 
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 public class Suggestion {
 
-    private String word;
+    @NonNull
     private User user;
+    @NonNull
+    private String word;
 
-    public Suggestion(User user, String word) {
-        this.word = word;
-        this.user = user;
-    }
 
-    public User getUser() {
-        return user;
-    }
-
-    public String getWord() {
-        return word;
-    }
 }
