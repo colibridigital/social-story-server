@@ -1,11 +1,17 @@
 package com.colibri.social_story.entities;
 
+import com.sun.istack.internal.NotNull;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 public class ScoredWord {
-    private String word;
+
+    @NonNull
     private User user;
+    @NonNull
+    private String word;
+    @NonNull
     private int score;
 
     public void incrementScore() {

@@ -8,9 +8,7 @@ public class Votes {
     private Set<ScoredWord> words = new HashSet<>();
 
     public void addWord(User user, String word) {
-        ScoredWord thisWord = new ScoredWord();
-        thisWord.setUser(user);
-        thisWord.setWord(word);
+        ScoredWord thisWord = new ScoredWord(user, word, 0);
         words.add(thisWord);
     }
 

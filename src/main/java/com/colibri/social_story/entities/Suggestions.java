@@ -1,6 +1,7 @@
 package com.colibri.social_story.entities;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,12 +15,15 @@ public class Suggestions {
     public Votes getWordsForVote() {
         Votes votes = new Votes();
         Set<User> users = suggestedWords.keySet();
-
+        Set<String> words = new HashSet<>();
         //Really advanced
         int i = 0;
         for(User user : users) {
             String word = suggestedWords.get(user);
+            if (words.contains(word))
+                continue;
             votes.addWord(user, word);
+            words.add(word);
             i++;
 
             //Awesome code
