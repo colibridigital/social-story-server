@@ -24,6 +24,11 @@ class MockStoryBase implements StoryBase {
     }
 
     @Override
+    public void removeStory() {
+
+    }
+
+    @Override
     public void onUserAdded(StoryBaseCallback storyBaseCallback) {
 
     }

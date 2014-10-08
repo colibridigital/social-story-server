@@ -58,8 +58,9 @@ public class FirebaseStoryBase implements StoryBase {
     @Override
     public void writeVotes(Votes v) throws InterruptedException {
         Map<String, Object> m = new HashMap<>();
-        for (ScoredWord sw : v.getWords())
+        for (ScoredWord sw : v.getWords()) {
             m.put(sw.getWord(), sw.getUser());
+        }
         syncSet("words", m);
     }
 
@@ -77,11 +78,27 @@ public class FirebaseStoryBase implements StoryBase {
         mp.put("time_story_started", story.getTimeStarted());
         mp.put("time_phase_started", story.getPhaseStarted());
         mp.put("story", story.getStory());
+        mp.put("title", story.getTitle());
         try {
             syncSet("attributes", mp);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void removeStory() {
+        try {
+            syncClear("");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void syncClear(String path) throws InterruptedException {
+        final CountDownLatch done = new CountDownLatch(1);
+        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
+        done.await();
     }
 
     private static class ReleaseLatchCompletionListener implements Firebase.CompletionListener {
