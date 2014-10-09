@@ -1,10 +1,10 @@
 package com.colibri.social_story.persistence;
 
 import com.colibri.social_story.config.Properties;
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Morphia;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
 
 import java.net.UnknownHostException;
 
@@ -17,7 +17,7 @@ public final class MongoConnectionManager {
 		String host = Properties.getProperty("dbserver");
 		
 		try {
-			Mongo m = new MongoClient(host, port);
+			MongoClient m = new MongoClient(host, port);
 			Morphia morphia = new Morphia();
 			
 			String classString = Properties.getProperty("classmap");

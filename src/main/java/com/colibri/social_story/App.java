@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.persistence.StoryDAO;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
@@ -31,7 +32,7 @@ public class App {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        (new App(DEFAULT_SUGGEST_TIME, DEFAULT_VOTE_TIME, N_ROUNDS, new MongoPersister())).run();
+       (new App(DEFAULT_SUGGEST_TIME, DEFAULT_VOTE_TIME, N_ROUNDS, new MongoPersister())).run();
     }
 
     private void connect() {

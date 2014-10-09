@@ -1,8 +1,8 @@
 package com.colibri.social_story.entities;
 
 
-import com.google.code.morphia.annotations.Id;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Id;
 
 public class AbstractStory {
     @Id

@@ -87,9 +87,9 @@
             <version>2.11.3</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.morphia</groupId>
+            <groupId>org.mongodb.morphia</groupId>
             <artifactId>morphia</artifactId>
-            <version>0.102</version>
+            <version>0.108</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

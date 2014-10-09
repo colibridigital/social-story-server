@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.mongodb.morphia.annotations.Transient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,8 @@ public class Story extends AbstractStory {
     private final int voteTime;
     private final int suggestTime;
     private final int nRounds;
+
+    @Transient
     private final StoryBase sb;
     private int minUsers;
     private Phase phase;
