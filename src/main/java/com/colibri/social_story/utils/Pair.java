@@ -1,5 +1,8 @@
 package com.colibri.social_story.utils;
 
+import lombok.Data;
+
+@Data
 public class Pair<X, Y> {
     public X fst;
     public Y snd;
