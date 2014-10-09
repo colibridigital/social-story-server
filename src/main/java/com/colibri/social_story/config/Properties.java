@@ -25,7 +25,7 @@ public class Properties {
 		if(trProps == null)
 			load();
 				
-		return(trProps.getProperty(property));
+		return trProps.getProperty(property);
 	}
 
 }
