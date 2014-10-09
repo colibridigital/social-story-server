@@ -36,52 +36,66 @@ public class App {
 
     private void connect() {
         Firebase fb = new Firebase(FB_URL);
-        fb.addChildEventListener(new FirebaseChildEventListenerAdapter() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                // TODO read values from snapshot
-                String storyId = dataSnapshot.getName();
-                // XXX assumes there is exactly one child
-                DataSnapshot attrDs = dataSnapshot.getChildren().iterator().next();
-                Map<String, String> attributes = (Map <String, String>)attrDs.getValue();
-                String title = attributes.get("title");
-                storyCreationQueue.add(new Story(
-                        3,
-                        new FirebaseStoryBase(new Firebase(FB_URL + storyId)),
-                        suggestTime,
-                        voteTime,
-                        nRounds,
-                        title
-                ));
-            }
-        });
+        fb.addChildEventListener(new StoryCreationController());
     }
 
     public void run() throws InterruptedException {
         connect();
-        while (!stop) {
-            final Story newStory = storyCreationQueue.poll(1, TimeUnit.SECONDS);
-            if (newStory == null)
-                continue;
-            es.submit(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("Starting story.");
-                    try {
-                        newStory.connect();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    persister.save(newStory);
-                }
-            });
+        while (!es.isShutdown()) {
+            Thread.sleep(5 * 1000);
         }
     }
 
     public void stop() {
         System.out.println("Shutting down app");
-        stop = true;
         es.shutdown();
+    }
+
+    /** Submits stories to the executor service. */
+    private class StoryCreationController extends FirebaseChildEventListenerAdapter {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            // TODO read values from snapshot
+            String storyId = dataSnapshot.getName();
+            Map<String, String> attributes = getAttributesMap(dataSnapshot);
+            String title = attributes.get("title");
+            final Story newStory = new Story(
+                    3,
+                    new FirebaseStoryBase(new Firebase(FB_URL + storyId)),
+                    suggestTime,
+                    voteTime,
+                    nRounds,
+                    title
+            );
+
+            es.submit(new StoryRunner(newStory));
+        }
+
+        private Map<String, String> getAttributesMap(DataSnapshot dataSnapshot) {
+            // XXX assumes there is exactly one child
+            DataSnapshot attrDs = dataSnapshot.getChildren().iterator().next();
+            return (Map <String, String>)attrDs.getValue();
+        }
+    }
+
+    /** Runs a story. **/
+    private class StoryRunner implements Runnable {
+        private final Story newStory;
+
+        public StoryRunner(Story newStory) {
+            this.newStory = newStory;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("Starting story.");
+            try {
+                newStory.connect();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            persister.save(newStory);
+        }
     }
 }
 
