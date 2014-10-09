@@ -3,6 +3,7 @@ package com.colibri.social_story;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class App {
@@ -21,7 +22,6 @@ public class App {
 
     private StoryPersister persister = new MongoPersister();
     private boolean stop = false;
-    private int storyId = 1;
 
     public App(int suggestTime, int voteTime, int nRounds, StoryPersister storyPersister) {
         this.suggestTime = suggestTime;
@@ -40,21 +40,21 @@ public class App {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // TODO read values from snapshot
-                System.out.println("Story added" + dataSnapshot.getName() + " " + dataSnapshot.getValue());
                 String storyId = dataSnapshot.getName();
+                // XXX assumes there is exactly one child
+                DataSnapshot attrDs = dataSnapshot.getChildren().iterator().next();
+                Map<String, String> attributes = (Map <String, String>)attrDs.getValue();
+                String title = attributes.get("title");
                 storyCreationQueue.add(new Story(
                         3,
                         new FirebaseStoryBase(new Firebase(FB_URL + storyId)),
                         suggestTime,
                         voteTime,
-                        nRounds
+                        nRounds,
+                        title
                 ));
             }
         });
-    }
-
-    private String freshStoryId() {
-        return Integer.toString(storyId++);
     }
 
     public void run() throws InterruptedException {

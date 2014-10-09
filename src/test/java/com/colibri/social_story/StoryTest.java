@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 public class StoryTest extends TestCase {
 
     public void testConnect() throws Exception {
-        Story sr = new Story(0, new MockStoryBase(), 0, 0, 2);
+        Story sr = new Story(0, new MockStoryBase(), 0, 0, 2, "Some title");
         sr.connect();
     }
 }

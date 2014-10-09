@@ -16,7 +16,7 @@ import java.util.concurrent.CountDownLatch;
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Story extends AbstractStory {
 
-    private final String title = "My title";
+    private String title;
     private final int voteTime;
     private final int suggestTime;
     private final int nRounds;
@@ -39,12 +39,13 @@ public class Story extends AbstractStory {
 
     public Story(int minUsers, StoryBase sb,
                  int suggestTime, int voteTime,
-                 int nRounds) {
+                 int nRounds, String title) {
         this.minUsers = minUsers;
         this.sb = sb;
         this.suggestTime = suggestTime;
         this.voteTime = voteTime;
         this.nRounds = nRounds;
+        this.title = title;
     }
 
     public boolean connect() throws InterruptedException {

@@ -9,16 +9,20 @@ import java.util.TimerTask;
 
 public class AppIntegrationTest extends TestCase {
 
+    private static final String STORY_TITLE = "Story title";
+    private static final int STORY_ID = 1;
+
     public void testApp() throws InterruptedException {
         Firebase fb = new Firebase(App.FB_URL);
 
         Timer t0 = new Timer();
-        t0.schedule(new StoryCreatorTestClient(fb, 1), 2 * 1000);
+        t0.schedule(new StoryCreatorTestClient(fb, STORY_ID, STORY_TITLE), 1000);
 
         Timer t = new Timer();
-        t.schedule(new StorySubscriberTestClient(fb.child("1"), "user1"), 3 * 1000);
+        Firebase storyFb = fb.child(Integer.toString(STORY_ID));
+        t.schedule(new StorySubscriberTestClient(storyFb, "user1"), 2 * 1000);
         t = new Timer();
-        t.schedule(new StorySubscriberTestClient(fb.child("1"), "user2"), 3 * 1000);
+        t.schedule(new StorySubscriberTestClient(storyFb, "user2"), 2 * 1000);
 
         final LinkedList<Story> ss = new LinkedList<>();
         final App app = new App(2 * 1000 , 2 * 1000, 1, new StoryPersister() {
@@ -33,11 +37,11 @@ public class AppIntegrationTest extends TestCase {
             public void run() {
                 app.stop();
             }
-        }, 10 * 1000);
+        }, 8 * 1000);
         app.run();
         assertEquals(1, ss.size());
         Story s = ss.getFirst();
-        //assertEquals(s.getTitle(), "Something");
+        assertEquals(s.getTitle(), STORY_TITLE);
         assertEquals(s.getStory(), "My big story some word");
     }
 }
