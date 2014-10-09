@@ -1,7 +1,10 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.utils.Pair;
 import com.firebase.client.Firebase;
 import junit.framework.TestCase;
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.junit.Assert;
 
 import java.util.LinkedList;
 import java.util.Timer;
@@ -12,26 +15,31 @@ public class AppIntegrationTest extends TestCase {
     private static final String STORY_TITLE = "Story title";
     private static final int STORY_ID = 1;
 
-    public void testApp() throws InterruptedException {
+    /** Creates a story and adds two more subscribers to it. */
+    private void setUpClients(int storyId, String storyTitle, String word) {
         Firebase fb = new Firebase(App.FB_URL);
-
         Timer t0 = new Timer();
-        t0.schedule(new StoryCreatorTestClient(fb, STORY_ID, STORY_TITLE), 1000);
-
+        t0.schedule(new StoryCreatorTestClient(fb, storyId, storyTitle, word), 1000);
         Timer t = new Timer();
-        Firebase storyFb = fb.child(Integer.toString(STORY_ID));
-        t.schedule(new StorySubscriberTestClient(storyFb, "user1"), 2 * 1000);
+        Firebase storyFb = fb.child(Integer.toString(storyId));
+        t.schedule(new StorySubscriberTestClient(storyFb, "user1", word), 2 * 1000);
         t = new Timer();
-        t.schedule(new StorySubscriberTestClient(storyFb, "user2"), 2 * 1000);
+        t.schedule(new StorySubscriberTestClient(storyFb, "user2", word), 2 * 1000);
+    }
 
-        final LinkedList<Story> ss = new LinkedList<>();
+    public void testTwoStories() throws InterruptedException {
+
+        setUpClients(1, "Story One", " one rulz!");
+        setUpClients(2, "Story Two", " two rulz!");
+
+        final LinkedList<Pair<String, String>> ss = new LinkedList<>();
         final App app = new App(2 * 1000 , 2 * 1000, 1, new StoryPersister() {
             @Override
             public void save(Story s) {
-                ss.add(s);
+                ss.add(new Pair<>(s.getTitle(), s.getStory()));
             }
         });
-        t = new Timer();
+        Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -39,9 +47,9 @@ public class AppIntegrationTest extends TestCase {
             }
         }, 8 * 1000);
         app.run();
-        assertEquals(1, ss.size());
-        Story s = ss.getFirst();
-        assertEquals(s.getTitle(), STORY_TITLE);
-        assertEquals(s.getStory(), "My big story some word");
+        LinkedList<Pair<String, String>> exp = new LinkedList<>();
+        exp.add(new Pair("Story One", "My big story one rulz!"));
+        exp.add(new Pair("Story Two", "My big story two rulz!"));
+        Assert.assertThat(ss, IsIterableContainingInAnyOrder.containsInAnyOrder(exp.toArray()));
     }
 }
