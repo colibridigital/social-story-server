@@ -23,6 +23,27 @@ public class FirebaseStoryBase implements StoryBase {
         done.await();
     }
 
+    private void syncClear(String path) throws InterruptedException {
+        final CountDownLatch done = new CountDownLatch(1);
+        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
+        done.await();
+    }
+
+    private Pair<String, Object> syncGetLeafFromRoot(String path) throws InterruptedException {
+        final CountDownLatch done = new CountDownLatch(1);
+        final Pair<String, Object> value = new Pair<>();
+        fb.getRoot().child(path).addValueEventListener( new FirebaseValueEventListenerAdapter() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                value.fst = dataSnapshot.getName();
+                value.snd = dataSnapshot.getValue();
+                done.countDown();
+            }
+        });
+        done.await();
+        return value;
+    }
+
     @Override
     public void onUserAdded(final StoryBaseCallback storyBaseCallback) {
         fb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
@@ -67,9 +88,8 @@ public class FirebaseStoryBase implements StoryBase {
 
     @Override
     public long getServerOffsetMillis() throws InterruptedException {
-        Date d = new Date();
-        // return (Integer)syncReadMessage(".info/serverTimeOffset");
-        return d.getTime();
+        Pair<String, Object> offset = syncGetLeafFromRoot(".info/serverTimeOffset");
+        return (new Date()).getTime() + (Long)offset.snd;
     }
 
     public void writeStoryAttributes(Story story) {
@@ -96,11 +116,6 @@ public class FirebaseStoryBase implements StoryBase {
         }
     }
 
-    private void syncClear(String path) throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
-        done.await();
-    }
 
     private static class ReleaseLatchCompletionListener implements Firebase.CompletionListener {
         private final CountDownLatch done;
