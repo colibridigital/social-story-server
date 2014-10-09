@@ -89,7 +89,7 @@ public class FirebaseStoryBase implements StoryBase {
     @Override
     public long getServerOffsetMillis() throws InterruptedException {
         Pair<String, Object> offset = syncGetLeafFromRoot(".info/serverTimeOffset");
-        return (new Date()).getTime() + (Long)offset.snd;
+        return new Date().getTime() + (Long)offset.snd;
     }
 
     public void writeStoryAttributes(Story story) {
