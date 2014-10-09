@@ -37,7 +37,7 @@ public class AppIntegrationTest extends TestCase {
         app.run();
         assertEquals(1, ss.size());
         Story s = ss.getFirst();
-        //assertEquals(s.getTitle(), "My title");
+        //assertEquals(s.getTitle(), "Something");
         assertEquals(s.getStory(), "My big story some word");
     }
 }

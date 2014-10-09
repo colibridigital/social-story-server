@@ -40,10 +40,11 @@ public class App {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 // TODO read values from snapshot
-                System.out.println("Story added");
+                System.out.println("Story added" + dataSnapshot.getName() + " " + dataSnapshot.getValue());
+                String storyId = dataSnapshot.getName();
                 storyCreationQueue.add(new Story(
                         3,
-                        new FirebaseStoryBase(new Firebase(FB_URL + freshStoryId())),
+                        new FirebaseStoryBase(new Firebase(FB_URL + storyId)),
                         suggestTime,
                         voteTime,
                         nRounds
