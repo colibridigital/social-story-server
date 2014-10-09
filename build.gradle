@@ -26,3 +26,17 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version:'4.10'
 }
 
+test {
+    exclude '**/*IntegrationTest*'
+    reports.html.destination = file("$buildDir/reports/unit-tests")
+}
+
+task integrationTest(type: Test) {
+    filter {
+        //include all integration tests
+        includeTestsMatching "*IntegrationTest"
+    }
+    reports.html.destination = file("$buildDir/reports/integration-tests")
+}
+
+check.dependsOn integrationTest
