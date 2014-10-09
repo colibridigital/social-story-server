@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 
 @Data
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class Story extends AbstractStory{
+public class Story extends AbstractStory {
 
     private final String title = "My title";
     private final int voteTime;
