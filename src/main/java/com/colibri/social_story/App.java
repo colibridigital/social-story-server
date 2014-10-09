@@ -27,7 +27,7 @@ public class App {
     }
 
     public void run() throws InterruptedException {
-        Story story = new Story(1,
+        Story story = new Story(2,
                 new FirebaseStoryBase(new Firebase(FB_URL)),
                 suggestTime,
                 voteTime,

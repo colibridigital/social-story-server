@@ -66,15 +66,15 @@ public class Story extends AbstractStory{
         sb.onWordAdded(new StoryBaseCallback<Pair<String, String>>() {
             @Override
             public void handle(Pair<String, String> s) {
-                System.out.println("Add suggestion");
-                roundSuggestions.addSuggestion(userMap.get(s.fst), s.snd);
+                System.out.println("Add suggestion " + s.fst );
+                roundSuggestions.addSuggestion(userMap.get(s.snd), s.fst);
             }
         });
 
         sb.onVotesAdded(new StoryBaseCallback<Pair<String, String>>() {
             @Override
             public void handle(Pair<String, String> vote) {
-                System.out.println("Add vote");
+                System.out.println("Add vote" + vote.snd);
                 roundVotes.voteForWord(vote.snd, userMap.get(vote.fst));
             }
         });
