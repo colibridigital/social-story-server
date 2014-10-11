@@ -1,11 +1,8 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.*;
 import com.colibri.social_story.utils.Pair;
 import com.firebase.client.Firebase;
 import junit.framework.TestCase;
-import org.hamcrest.collection.IsIterableContainingInAnyOrder;
-import org.junit.Assert;
 
 import java.util.LinkedList;
 import java.util.Timer;

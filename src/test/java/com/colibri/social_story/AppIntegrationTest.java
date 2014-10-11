@@ -45,8 +45,9 @@ public class AppIntegrationTest extends TestCase {
             public void run() {
                 app.stop();
             }
-        }, 8 * 1000);
+        }, 12 * 1000);
         app.run();
+        assertEquals(ss.size(), 2);
         LinkedList<Pair<String, String>> exp = new LinkedList<>();
         exp.add(new Pair("Story One", "My big story one rulz!"));
         exp.add(new Pair("Story Two", "My big story two rulz!"));

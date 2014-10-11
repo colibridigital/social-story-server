@@ -17,6 +17,12 @@ apply plugin: 'pmd'
 apply plugin: 'build-dashboard'
 apply plugin: 'cobertura'
 
+subprojects {
+    tasks.withType(Test) {
+        maxParallelForks = 1
+    }
+}
+
 dependencies {
     compile group: 'com.firebase', name: 'firebase-client-jvm', version: '1.1.1'
     compile group: 'org.mongodb', name: 'mongo-java-driver', version: '2.11.3'
