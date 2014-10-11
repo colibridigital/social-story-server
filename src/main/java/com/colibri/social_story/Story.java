@@ -104,7 +104,6 @@ public class Story extends AbstractStory {
             Thread.sleep(voteTime);
             finish = voteEnd();
             r++;
-            sb.removeStory();
         }
 
         end();
@@ -131,6 +130,7 @@ public class Story extends AbstractStory {
 
     private void end() {
         System.out.println("Story end");
+        sb.removeStory();
     }
 
     public enum Phase {
