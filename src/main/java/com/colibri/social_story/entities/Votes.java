@@ -1,5 +1,6 @@
 package com.colibri.social_story.entities;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ public class Votes {
 
     public void voteForWord(String word, User user) {
         synchronized (word) {
+            System.out.println(user.getUserName() + " is voting for " + word);
             //Maybe we want to change this to a map to make it faster, maybe we dont care
             for(ScoredWord thisWord : words) {
                 if(thisWord.getWord().equals(word)) {
@@ -21,19 +23,13 @@ public class Votes {
                 }
             }
         }
+
+        System.out.println(words);
     }
 
     public ScoredWord pickWinner() {
-        int maxScore = 0;
-        ScoredWord highScore = null;
-
-        for(ScoredWord word : words) {
-            if(word.getScore() >= maxScore) {
-                highScore = word;
-            }
-        }
-
-        return highScore;
+        System.out.println(words);
+        return Collections.max(words);
     }
 
     public Set<ScoredWord> getWords() {

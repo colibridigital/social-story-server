@@ -11,8 +11,8 @@ public class App {
 
     public static final String FB_URL = "https://colibristory.firebaseio.com/social-story/live-stories/";
 
-    private static final int DEFAULT_SUGGEST_TIME = 5 * 1000;
-    private static final int DEFAULT_VOTE_TIME = 5 * 1000;
+    private static final int DEFAULT_SUGGEST_TIME = 30 * 1000;
+    private static final int DEFAULT_VOTE_TIME = 30 * 1000;
     private static final int N_ROUNDS = 10;
     private int nRounds = N_ROUNDS;
     private int voteTime = DEFAULT_VOTE_TIME;
@@ -58,10 +58,10 @@ public class App {
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             // TODO read values from snapshot
             String storyId = dataSnapshot.getName();
-            Map<String, String> attributes = getAttributesMap(dataSnapshot);
-            String title = attributes.get("title");
+            Map<String, Object> attributes = getAttributesMap(dataSnapshot);
+            String title = attributes.get("title").toString();
             final Story newStory = new Story(
-                    3,
+                    (int) (long) attributes.get("min_users"),
                     new FirebaseStoryBase(new Firebase(FB_URL + storyId)),
                     suggestTime,
                     voteTime,
@@ -72,10 +72,10 @@ public class App {
             es.submit(new StoryRunner(newStory));
         }
 
-        private Map<String, String> getAttributesMap(DataSnapshot dataSnapshot) {
+        private Map<String, Object> getAttributesMap(DataSnapshot dataSnapshot) {
             // XXX assumes there is exactly one child
             DataSnapshot attrDs = dataSnapshot.getChildren().iterator().next();
-            return (Map <String, String>)attrDs.getValue();
+            return (Map <String, Object>)attrDs.getValue();
         }
     }
 
@@ -89,7 +89,7 @@ public class App {
 
         @Override
         public void run() {
-            System.out.println("Starting story.");
+            System.out.println("Starting story " + newStory.getTitle());
             try {
                 newStory.connect();
             } catch (InterruptedException e) {

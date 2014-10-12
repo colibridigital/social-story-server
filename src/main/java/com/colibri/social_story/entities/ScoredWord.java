@@ -5,7 +5,7 @@ import lombok.NonNull;
 
 @Data
 @SuppressWarnings("PMD.UnusedPrivateField")
-public class ScoredWord {
+public class ScoredWord implements  Comparable<ScoredWord> {
 
     @NonNull
     private User user;
@@ -16,5 +16,10 @@ public class ScoredWord {
 
     public void incrementScore() {
         score++;
+    }
+
+    @Override
+    public int compareTo(ScoredWord o) {
+        return Integer.compare(this.score, o.score);
     }
 }

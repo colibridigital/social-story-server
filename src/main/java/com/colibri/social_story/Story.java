@@ -71,7 +71,7 @@ public class Story extends AbstractStory {
             @Override
             public void handle(Pair<String, String> s) {
                 System.out.println("Add suggestion " + s.fst );
-                roundSuggestions.addSuggestion(userMap.get(s.snd), s.fst);
+                roundSuggestions.addSuggestion(userMap.get(s.fst), s.snd);
             }
         });
 
@@ -103,6 +103,7 @@ public class Story extends AbstractStory {
             sb.writeStoryAttributes(this);
             Thread.sleep(voteTime);
             finish = voteEnd();
+            sb.removeStory();
             r++;
         }
 

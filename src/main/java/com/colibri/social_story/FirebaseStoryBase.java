@@ -100,6 +100,7 @@ public class FirebaseStoryBase implements StoryBase {
         mp.put("time_phase_started", story.getPhaseStarted());
         mp.put("story", story.getStory());
         mp.put("title", story.getTitle());
+        mp.put("min_users", story.getMinUsers());
         try {
             syncSet("attributes", mp);
         } catch (Exception e) {
