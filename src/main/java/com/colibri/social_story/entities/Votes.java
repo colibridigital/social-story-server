@@ -28,8 +28,7 @@ public class Votes {
     }
 
     public ScoredWord pickWinner() {
-        System.out.println(words);
-        return Collections.max(words);
+        return words.size() > 0 ? Collections.max(words) : null;
     }
 
     public Set<ScoredWord> getWords() {

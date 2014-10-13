@@ -1,8 +1,10 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.persistence.StoryDAO;
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.Map;
 import java.util.concurrent.*;
@@ -37,6 +39,7 @@ public class App {
 
     private void connect() {
         Firebase fb = new Firebase(FB_URL);
+        //syncAuth(fb);
         fb.addChildEventListener(new StoryCreationController());
     }
 
@@ -52,31 +55,62 @@ public class App {
         es.shutdown();
     }
 
+    private void syncAuth(Firebase ref) {
+        if (ref.getAuth() == null) {
+            System.out.println("Authenticating server..");
+            final CountDownLatch cd = new CountDownLatch(1);
+            ref.authWithPassword(
+                    "megatron1@gmail.com", "secret",
+                    new Firebase.AuthResultHandler() {
+                        @Override
+                        public void onAuthenticated(AuthData authData) {
+                            System.out.println("Server authentication successful " + authData);
+                            cd.countDown();
+                        }
+
+                        @Override
+                        public void onAuthenticationError(FirebaseError firebaseError) {
+                            System.out.println("Server authentication failed");
+                            cd.countDown();
+                        }
+                    });
+            try {
+                cd.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("done");
+        }
+    }
+
     /** Submits stories to the executor service. */
     private class StoryCreationController extends FirebaseChildEventListenerAdapter {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             // TODO read values from snapshot
             String storyId = dataSnapshot.getName();
-            Map<String, Object> attributes = getAttributesMap(dataSnapshot);
-            String title = attributes.get("title").toString();
+            final Map<String, Object> attributes = getAttributesMap(dataSnapshot);
+            final Firebase ref = new Firebase(FB_URL + storyId);
+            Object title = attributes.get("title");
+            int minUsers = (int) (long) attributes.get("min_users");
             final Story newStory = new Story(
-                    (int) (long) attributes.get("min_users"),
-                    new FirebaseStoryBase(new Firebase(FB_URL + storyId)),
+                    minUsers,
+                    new FirebaseStoryBase(ref),
                     suggestTime,
                     voteTime,
                     nRounds,
-                    title
+                    title.toString()
             );
-
             es.submit(new StoryRunner(newStory));
         }
+
 
         private Map<String, Object> getAttributesMap(DataSnapshot dataSnapshot) {
             // XXX assumes there is exactly one child
             DataSnapshot attrDs = dataSnapshot.getChildren().iterator().next();
             return (Map <String, Object>)attrDs.getValue();
         }
+
     }
 
     /** Runs a story. **/

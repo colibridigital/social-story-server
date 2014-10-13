@@ -1,6 +1,8 @@
 package com.colibri.social_story;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.Timer;
 
@@ -9,9 +11,17 @@ public class TestUtils {
     /** Creates a story and adds two more subscribers to it. */
     public static void setUpProducerTwoConsumers(int storyId, String storyTitle, String word) {
         Firebase fb = new Firebase(App.FB_URL);
-        new Timer().schedule(new StoryCreatorTestClient(fb, storyId, storyTitle, word), 1000);
+        StoryCreatorTestClient sc = new StoryCreatorTestClient(fb, "megatron1@gmail.com", storyId, storyTitle, word);
         Firebase storyFb = fb.child(Integer.toString(storyId));
-        new Timer().schedule(new StorySubscriberTestClient(storyFb, "user1", word), 2 * 1000);
-        new Timer().schedule(new StorySubscriberTestClient(storyFb, "user2", word), 2 * 1000);
+        StorySubscriberTestClient sub1 = new StorySubscriberTestClient(storyFb, "megatron2@gmail.com", word);
+        StorySubscriberTestClient sub2 = new StorySubscriberTestClient(storyFb, "megatron3@gmail.com", word);
+
+        sc.auth();
+        sub1.auth();
+        sub2.auth();
+
+        new Timer().schedule(sc, 1000);
+        new Timer().schedule(sub1, 2 * 1000);
+        new Timer().schedule(sub2, 2 * 1000);
     }
 }

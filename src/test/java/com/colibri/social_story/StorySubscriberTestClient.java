@@ -8,14 +8,12 @@ import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
 /** Simple client that connects to a story proposes and votes for the same word. */
-class StorySubscriberTestClient extends TimerTask {
-    private final Firebase fb;
+class StorySubscriberTestClient extends TestClient {
+
     private final String word;
-    private String username;
 
     StorySubscriberTestClient(Firebase fb, String username, String word) {
-        this.fb = fb;
-        this.username = username;
+        super(fb, username);
         this.word = word;
     }
 
@@ -35,7 +33,8 @@ class StorySubscriberTestClient extends TimerTask {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fb.child("suggestions").updateChildren(Utils.mapFromKeys(this.word, (Object)this.username));
+
+        fb.child("suggestions").updateChildren(Utils.mapFromKeys(this.username, (Object)this.word));
 
         final CountDownLatch done2 = new CountDownLatch(1);
         fb.child("attributes").child("phase").addValueEventListener(

@@ -30,6 +30,7 @@ public class StoryTest extends TestCase {
             inOrder.verify(storyBase).writeVotes(any(Votes.class));
             inOrder.verify(storyBase).getServerOffsetMillis();
             inOrder.verify(storyBase).writeStoryAttributes(any(Story.class));
+            inOrder.verify(storyBase, calls(1)).removeStory();
         }
         inOrder.verify(storyBase, calls(1)).removeStory();
         inOrder.verifyNoMoreInteractions();

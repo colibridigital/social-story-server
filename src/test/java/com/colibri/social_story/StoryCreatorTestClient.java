@@ -1,18 +1,18 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.utils.Utils;
 import com.firebase.client.Firebase;
 
-import java.util.TimerTask;
+import java.util.Map;
 
-public class StoryCreatorTestClient extends TimerTask {
+public class StoryCreatorTestClient extends TestClient {
 
-    private final Firebase fb;
     private final String title;
     private final String word;
     private int id = 1;
 
-    public StoryCreatorTestClient(Firebase fb, int id, String title, String word) {
-        this.fb = fb;
+    public StoryCreatorTestClient(Firebase fb, String username, int id, String title, String word) {
+        super(fb, username);
         this.id = id;
         this.title = title;
         this.word = word;
@@ -21,10 +21,12 @@ public class StoryCreatorTestClient extends TimerTask {
     @Override
     public void run() {
         // push a new story
-        fb.child(id + "/attributes/title").setValue(title);
+        Map<String, Object> mp = Utils.mapFromKeys("title", (Object)title);
+        mp.put("min_users", 2);
+        fb.child(id + "/attributes/").setValue(mp);
 
         // subscribe to it as usual
-        StorySubscriberTestClient sub = new StorySubscriberTestClient(fb.child(Integer.toString(id)), "cuser", word);
+        StorySubscriberTestClient sub = new StorySubscriberTestClient(fb.child(Integer.toString(id)), this.username, word);
         sub.run();
     }
 }
