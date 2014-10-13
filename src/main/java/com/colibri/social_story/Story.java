@@ -117,7 +117,7 @@ public class Story extends AbstractStory {
     private void suggestionEnd() throws InterruptedException {
         log.info("Suggestion end");
         roundVotes = roundSuggestions.getWordsForVote();
-        roundVotes.addWord(null, "End");
+        //roundVotes.addWord(new User(""), "End");
         log.info("Round votes: " + roundVotes);
         sb.writeVotes(roundVotes);
         suggestions.add(roundSuggestions);
