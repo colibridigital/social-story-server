@@ -1,6 +1,5 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.persistence.StoryDAO;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -8,8 +7,11 @@ import com.firebase.client.FirebaseError;
 
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.logging.Logger;
 
 public class App {
+
+    private static final Logger log = Logger.getLogger(App.class.getName());
 
     public static final String FB_URL = "https://colibristory.firebaseio.com/social-story/live-stories/";
 
@@ -38,6 +40,7 @@ public class App {
     }
 
     private void connect() {
+        log.info("Connecting to firebase");
         Firebase fb = new Firebase(FB_URL);
         //syncAuth(fb);
         fb.addChildEventListener(new StoryCreationController());
@@ -51,26 +54,26 @@ public class App {
     }
 
     public void stop() {
-        System.out.println("Shutting down app");
+        log.info("Shutting down app");
         es.shutdown();
     }
 
     private void syncAuth(Firebase ref) {
         if (ref.getAuth() == null) {
-            System.out.println("Authenticating server..");
+            log.info("Authenticating server..");
             final CountDownLatch cd = new CountDownLatch(1);
             ref.authWithPassword(
                     "megatron1@gmail.com", "secret",
                     new Firebase.AuthResultHandler() {
                         @Override
                         public void onAuthenticated(AuthData authData) {
-                            System.out.println("Server authentication successful " + authData);
+                            log.info("Server authentication successful " + authData);
                             cd.countDown();
                         }
 
                         @Override
                         public void onAuthenticationError(FirebaseError firebaseError) {
-                            System.out.println("Server authentication failed");
+                            log.severe("Server authentication failed");
                             cd.countDown();
                         }
                     });
@@ -79,7 +82,6 @@ public class App {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("done");
         }
     }
 
@@ -107,6 +109,7 @@ public class App {
 
         private Map<String, Object> getAttributesMap(DataSnapshot dataSnapshot) {
             // XXX assumes there is exactly one child
+
             DataSnapshot attrDs = dataSnapshot.getChildren().iterator().next();
             return (Map <String, Object>)attrDs.getValue();
         }
@@ -123,7 +126,7 @@ public class App {
 
         @Override
         public void run() {
-            System.out.println("Starting story " + newStory.getTitle());
+            log.info("Starting new story " + newStory);
             try {
                 newStory.connect();
             } catch (InterruptedException e) {

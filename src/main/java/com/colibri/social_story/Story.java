@@ -12,10 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Logger;
 
 @Data
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Story extends AbstractStory {
+
+    private static final Logger log = Logger.getLogger(Story.class.getName());
 
     private String title;
     private final int voteTime;
@@ -57,8 +60,9 @@ public class Story extends AbstractStory {
                            @Override
                            public void handle(String username) {
                                // TODO do something user
-                               userMap.put(username, new User(username));
-                               System.out.println("Added user" + username);
+                               User u = new User(username);
+                               userMap.put(username, u);
+                               log.info(u + " joined " + Story.this);
                                done.countDown();
                            }
                        }
@@ -70,7 +74,7 @@ public class Story extends AbstractStory {
         sb.onWordAdded(new StoryBaseCallback<Pair<String, String>>() {
             @Override
             public void handle(Pair<String, String> s) {
-                System.out.println("Add suggestion " + s.fst );
+                log.info("Add " + s + " to " + Story.this);
                 roundSuggestions.addSuggestion(userMap.get(s.fst), s.snd);
             }
         });
@@ -78,7 +82,7 @@ public class Story extends AbstractStory {
         sb.onVotesAdded(new StoryBaseCallback<Pair<String, String>>() {
             @Override
             public void handle(Pair<String, String> vote) {
-                System.out.println("Add vote" + vote.snd);
+                log.info("Add " + vote + " to " + Story.this);
                 roundVotes.voteForWord(vote.snd, userMap.get(vote.fst));
             }
         });
@@ -111,15 +115,17 @@ public class Story extends AbstractStory {
     }
 
     private void suggestionEnd() throws InterruptedException {
-        System.out.println("Suggestion end");
+        log.info("Suggestion end");
         roundVotes = roundSuggestions.getWordsForVote();
+        roundVotes.addWord(null, "End");
+        log.info("Round votes: " + roundVotes);
         sb.writeVotes(roundVotes);
         suggestions.add(roundSuggestions);
         roundSuggestions = new Suggestions();
     }
 
     private boolean voteEnd() throws InterruptedException {
-        System.out.println("Vote end");
+        log.info("Vote end");
         ScoredWord sw = roundVotes.pickWinner();
         if (sw == null)
             return false;
@@ -130,7 +136,7 @@ public class Story extends AbstractStory {
     }
 
     private void end() {
-        System.out.println("Story end");
+        log.info("Story end");
         sb.removeStory();
     }
 
