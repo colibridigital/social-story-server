@@ -76,10 +76,11 @@ public class FirebaseStoryBase implements StoryBase {
         return new Date().getTime() + (Long)offset.snd;
     }
 
-    public void writeStoryAttributes(Story story) {
+    @Override
+    public void syncWrite(Object object) {
         try {
             final CountDownLatch done = new CountDownLatch(1);
-            fb.setValue(story, new ReleaseLatchCompletionListener(done));
+            fb.setValue(object, new ReleaseLatchCompletionListener(done));
         } catch (Exception e) {
             e.printStackTrace();
         }

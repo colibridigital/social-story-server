@@ -101,12 +101,12 @@ public class Story extends AbstractStory {
         while (!finish && r < nRounds) {
             phase = Phase.SUGGEST;
             phaseStarted = sb.getServerOffsetMillis();
-            sb.writeStoryAttributes(this);
+            sb.syncWrite(this);
             Thread.sleep(suggestTime);
             suggestionEnd();
             phase = Phase.VOTE;
             phaseStarted = sb.getServerOffsetMillis();
-            sb.writeStoryAttributes(this);
+            sb.syncWrite(this);
             Thread.sleep(voteTime);
             finish = voteEnd();
             sb.removeStory();
