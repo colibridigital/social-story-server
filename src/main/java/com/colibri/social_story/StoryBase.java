@@ -1,7 +1,5 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.entities.Votes;
-
 public interface StoryBase {
 
     long getServerOffsetMillis() throws InterruptedException;

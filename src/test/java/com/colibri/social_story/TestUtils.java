@@ -1,8 +1,6 @@
 package com.colibri.social_story;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
 import java.util.Timer;
 

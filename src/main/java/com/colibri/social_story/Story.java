@@ -8,7 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.mongodb.morphia.annotations.Transient;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 

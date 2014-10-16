@@ -1,7 +1,9 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.utils.Pair;
-import com.firebase.client.*;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;

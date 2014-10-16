@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.colibri.social_story.TestUtils.*;
+import static com.colibri.social_story.TestUtils.setUpProducerTwoConsumers;
 
 public class AppIntegrationTest extends TestCase {
 

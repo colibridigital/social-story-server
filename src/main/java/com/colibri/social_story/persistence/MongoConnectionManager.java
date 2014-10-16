@@ -1,7 +1,6 @@
 package com.colibri.social_story.persistence;
 
 import com.colibri.social_story.config.Properties;
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;

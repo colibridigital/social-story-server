@@ -1,6 +1,5 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.entities.Votes;
 import junit.framework.TestCase;
 import org.mockito.InOrder;
 

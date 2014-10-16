@@ -1,11 +1,8 @@
 package com.colibri.social_story;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
 import java.util.TimerTask;
-import java.util.concurrent.CountDownLatch;
 
 public abstract class TestClient extends TimerTask {
 

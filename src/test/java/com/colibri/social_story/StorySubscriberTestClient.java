@@ -4,7 +4,6 @@ import com.colibri.social_story.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
-import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
 /** Simple client that connects to a story proposes and votes for the same word. */
