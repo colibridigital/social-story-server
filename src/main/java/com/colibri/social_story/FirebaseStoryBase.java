@@ -1,13 +1,9 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.entities.*;
 import com.colibri.social_story.utils.Pair;
 import com.firebase.client.*;
-import com.google.gson.Gson;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseStoryBase implements StoryBase {
@@ -81,13 +77,7 @@ public class FirebaseStoryBase implements StoryBase {
     public void writeStoryAttributes(Story story) {
         try {
             final CountDownLatch done = new CountDownLatch(1);
-            fb.setValue(story, new Firebase.CompletionListener() {
-                @Override
-                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                    done.countDown();
-                }
-            });
-            done.await();
+            fb.setValue(story, new ReleaseLatchCompletionListener(done));
         } catch (Exception e) {
             e.printStackTrace();
         }
