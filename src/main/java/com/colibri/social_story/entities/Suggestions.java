@@ -1,11 +1,15 @@
 package com.colibri.social_story.entities;
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Data
 public class Suggestions {
+
     private Map<User, String> suggestedWords = new HashMap<>();
 
     public void addSuggestion(User user, String suggestion) {
@@ -32,5 +36,13 @@ public class Suggestions {
         }
 
         return votes;
+    }
+
+    public Map<String, Object> getSuggestedWords() {
+        Map<String, Object> mp = new HashMap<>();
+        for (Map.Entry<User, String> me : suggestedWords.entrySet()) {
+            mp.put(me.getKey().getUserName(), me.getValue());
+        }
+        return mp;
     }
 }

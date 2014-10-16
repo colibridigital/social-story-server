@@ -94,7 +94,7 @@ public class App {
             final Map<String, Object> attributes = getAttributesMap(dataSnapshot);
             final Firebase ref = new Firebase(FB_URL + storyId);
             Object title = attributes.get("title");
-            int minUsers = (int) (long) attributes.get("min_users");
+            int minUsers = (int) (long) attributes.get("minUsers");
             final Story newStory = new Story(
                     minUsers,
                     new FirebaseStoryBase(ref),
@@ -109,9 +109,7 @@ public class App {
 
         private Map<String, Object> getAttributesMap(DataSnapshot dataSnapshot) {
             // XXX assumes there is exactly one child
-
-            DataSnapshot attrDs = dataSnapshot.getChildren().iterator().next();
-            return (Map <String, Object>)attrDs.getValue();
+            return (Map <String, Object>)dataSnapshot.getValue();
         }
 
     }

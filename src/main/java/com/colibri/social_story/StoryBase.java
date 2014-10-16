@@ -12,8 +12,6 @@ public interface StoryBase {
 
     void onVotesAdded(final StoryBaseCallback storyBaseCallback);
 
-    void writeVotes(Votes v) throws InterruptedException;
-
     void writeStoryAttributes(Story story);
 
     void removeStory();

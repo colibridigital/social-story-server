@@ -22,8 +22,8 @@ public class StoryCreatorTestClient extends TestClient {
     public void run() {
         // push a new story
         Map<String, Object> mp = Utils.mapFromKeys("title", (Object)title);
-        mp.put("min_users", 2);
-        fb.child(id + "/attributes/").setValue(mp);
+        mp.put("minUsers", 2);
+        fb.child(id + "/").setValue(mp);
 
         // subscribe to it as usual
         StorySubscriberTestClient sub = new StorySubscriberTestClient(fb.child(Integer.toString(id)), this.username, word);

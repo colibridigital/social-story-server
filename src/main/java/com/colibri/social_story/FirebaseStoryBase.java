@@ -3,6 +3,7 @@ package com.colibri.social_story;
 import com.colibri.social_story.entities.*;
 import com.colibri.social_story.utils.Pair;
 import com.firebase.client.*;
+import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,12 +16,6 @@ public class FirebaseStoryBase implements StoryBase {
 
     public FirebaseStoryBase(Firebase fb) {
         this.fb = fb;
-    }
-
-    public void syncSet(String path, Map<String, Object> message) throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).setValue(message, new ReleaseLatchCompletionListener(done));
-        done.await();
     }
 
     private void syncClear(String path) throws InterruptedException {
@@ -78,31 +73,21 @@ public class FirebaseStoryBase implements StoryBase {
     }
 
     @Override
-    public void writeVotes(Votes v) throws InterruptedException {
-        Map<String, Object> m = new HashMap<>();
-        for (ScoredWord sw : v.getWords()) {
-            m.put(sw.getWord(), sw.getUser());
-        }
-        syncSet("words", m);
-    }
-
-    @Override
     public long getServerOffsetMillis() throws InterruptedException {
         Pair<String, Object> offset = syncGetLeafFromRoot(".info/serverTimeOffset");
         return new Date().getTime() + (Long)offset.snd;
     }
 
     public void writeStoryAttributes(Story story) {
-        Map<String, Object> mp = new HashMap<>();
-        mp.put("started", story.getTimeStarted());
-        mp.put("phase", story.getPhase());
-        mp.put("time_story_started", story.getTimeStarted());
-        mp.put("time_phase_started", story.getPhaseStarted());
-        mp.put("story", story.getStory());
-        mp.put("title", story.getTitle());
-        mp.put("min_users", story.getMinUsers());
         try {
-            syncSet("attributes", mp);
+            final CountDownLatch done = new CountDownLatch(1);
+            fb.setValue(story, new Firebase.CompletionListener() {
+                @Override
+                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                    done.countDown();
+                }
+            });
+            done.await();
         } catch (Exception e) {
             e.printStackTrace();
         }

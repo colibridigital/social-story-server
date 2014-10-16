@@ -21,7 +21,7 @@ class StorySubscriberTestClient extends TestClient {
     public void run() {
         fb.child("users").updateChildren(Utils.mapFromKeys(this.username, (Object) this.username));
         final CountDownLatch done = new CountDownLatch(1);
-        fb.child("attributes/phase").addValueEventListener(
+        fb.child("/phase").addValueEventListener(
                 new FirebaseValueEventListenerAdapter() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -33,11 +33,10 @@ class StorySubscriberTestClient extends TestClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         fb.child("suggestions").updateChildren(Utils.mapFromKeys(this.username, (Object)this.word));
 
         final CountDownLatch done2 = new CountDownLatch(1);
-        fb.child("attributes").child("phase").addValueEventListener(
+        fb.child("phase").addValueEventListener(
                 new FirebaseValueEventListenerAdapter() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

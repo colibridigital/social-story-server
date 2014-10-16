@@ -8,9 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.mongodb.morphia.annotations.Transient;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
@@ -26,19 +24,20 @@ public class Story extends AbstractStory {
     private final int nRounds;
 
     @Transient
-    private final StoryBase sb;
+    @Getter(AccessLevel.NONE)
+    transient private final StoryBase sb;
     private int minUsers;
     private Phase phase;
     private long timeStarted;
     private long phaseStarted;
     private String story = "My big story";
 
-    private static Map<String, User> userMap = new HashMap<>();
+    private final Map<String, User> users = new HashMap<>();
 
-    final private ConcurrentLinkedQueue<Suggestions> suggestions = new ConcurrentLinkedQueue<>();
-    final private ConcurrentLinkedQueue<Votes> votes = new ConcurrentLinkedQueue<>();
+    @Getter(AccessLevel.NONE)
+    final private List<Suggestions> suggestions = new Vector<>();
+    final private List<Votes> votes = new Vector<>();
 
-    @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Suggestions roundSuggestions;
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Votes roundVotes;
@@ -61,7 +60,7 @@ public class Story extends AbstractStory {
                            public void handle(String username) {
                                // TODO do something user
                                User u = new User(username);
-                               userMap.put(username, u);
+                               users.put(username, u);
                                log.info(u + " joined " + Story.this);
                                done.countDown();
                            }
@@ -75,7 +74,7 @@ public class Story extends AbstractStory {
             @Override
             public void handle(Pair<String, String> s) {
                 log.info("Add " + s + " to " + Story.this);
-                roundSuggestions.addSuggestion(userMap.get(s.fst), s.snd);
+                roundSuggestions.addSuggestion(users.get(s.fst), s.snd);
             }
         });
 
@@ -83,7 +82,7 @@ public class Story extends AbstractStory {
             @Override
             public void handle(Pair<String, String> vote) {
                 log.info("Add " + vote + " to " + Story.this);
-                roundVotes.voteForWord(vote.snd, userMap.get(vote.fst));
+                roundVotes.voteForWord(vote.snd, users.get(vote.fst));
             }
         });
         start();
@@ -114,12 +113,13 @@ public class Story extends AbstractStory {
         end();
     }
 
+
+
     private void suggestionEnd() throws InterruptedException {
         log.info("Suggestion end");
         roundVotes = roundSuggestions.getWordsForVote();
         //roundVotes.addWord(new User(""), "End");
         log.info("Round votes: " + roundVotes);
-        sb.writeVotes(roundVotes);
         suggestions.add(roundSuggestions);
         roundSuggestions = new Suggestions();
     }
@@ -142,6 +142,20 @@ public class Story extends AbstractStory {
 
     public enum Phase {
         VOTE, SUGGEST
+    }
+
+    public Suggestions getSuggestions() {
+        return roundSuggestions;
+    }
+
+    public Map<String, Object> getWords() {
+        Map<String, Object> m = new HashMap<>();
+        if (roundVotes != null) {
+            for (ScoredWord sw : roundVotes.getWords()) {
+                m.put(sw.getWord(), sw.getUser());
+            }
+        }
+        return m;
     }
 }
 
