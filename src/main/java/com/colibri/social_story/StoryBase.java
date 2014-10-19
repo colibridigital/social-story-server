@@ -10,7 +10,7 @@ public interface StoryBase {
 
     void onVotesAdded(final StoryBaseCallback storyBaseCallback);
 
-    void syncWrite(Object object);
+    void saveStory(Story story);
 
     void removeStory();
 }

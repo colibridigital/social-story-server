@@ -23,7 +23,7 @@ public class MongoIntegrationTest extends TestCase {
             public void run() {
                 app.stop();
             }
-        }, 8 * 1000);
+        }, 12 * 1000);
         app.run();
 
         // TODO read back stories and check as expected

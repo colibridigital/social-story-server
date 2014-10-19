@@ -2,7 +2,9 @@ package com.colibri.social_story;
 
 import com.colibri.social_story.entities.Ranking;
 import com.colibri.social_story.entities.User;
+import com.colibri.social_story.transport.FBRankingsPersister;
 import com.colibri.social_story.transport.FBUserPersister;
+import com.colibri.social_story.transport.RankingsPersister;
 import com.colibri.social_story.transport.UserPersister;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -98,7 +100,7 @@ public class App {
             // TODO read values from snapshot
             String storyId = dataSnapshot.getName();
             final Map<String, Object> attributes = getAttributesMap(dataSnapshot);
-            final Firebase ref = new Firebase(FB_URL + storyId);
+            final Superbase ref = new Superbase(FB_URL + storyId);
             Object title = attributes.get("title");
             int minUsers = (int) (long) attributes.get("minUsers");
             final Story newStory = new Story(
@@ -137,9 +139,8 @@ public class App {
                 e.printStackTrace();
             }
 
-            postProcessStory(newStory);
+            // postProcessStory(newStory);
             persister.save(newStory);
-
         }
 
         private void postProcessStory(Story newStory) {
@@ -167,7 +168,8 @@ public class App {
         }
 
         private void persistRanking(Ranking ranking) {
-
+            RankingsPersister rp = new FBRankingsPersister(new Superbase(FB_ROOT_URL));
+            rp.saveRanking(ranking);
         }
     }
 }
