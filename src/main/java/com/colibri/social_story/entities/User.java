@@ -14,7 +14,7 @@ public class User {
 
     public User(String userName) {this.userName = userName;}
 
-    public void addScore(int extraScore) {
+    public synchronized void addScore(int extraScore) {
         score += extraScore;
     }
 }

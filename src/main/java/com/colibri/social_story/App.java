@@ -10,9 +10,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
@@ -35,6 +33,9 @@ public class App {
 
     private StoryPersister persister = new MongoPersister();
     private boolean stop = false;
+
+    private List<User> allUsers;
+    private Ranking ranking;
 
     public App(int suggestTime, int voteTime, int nRounds, StoryPersister storyPersister) {
         this.suggestTime = suggestTime;
@@ -167,7 +168,15 @@ public class App {
                 up.persistUser(u);
         }
 
-        private Ranking updateRankings(List<User> users) {
+        private Ranking updateRankings() {
+            synchronized(App.this) {
+                Collections.sort(allUsers, new Comparator<User>() {
+                    @Override
+                    public int compare(User o1, User o2) {
+                        return o1.getScore() - o2.getScore();
+                    }
+                });
+            }
             // TODO
             return null;
         }
