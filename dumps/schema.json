@@ -1,5 +1,15 @@
 {
     "social-story" : {
+        "profiles" : {
+            "megatron1" : {
+                "score" : 2,
+                "userName" : "megatron1"
+            },
+            "megatron3" : {
+                "score" : 2,
+                "userName" : "megatron3"
+            }
+        },
         "live-stories" : {
         },
         "schema" : {

@@ -3,6 +3,8 @@ package com.colibri.social_story.transport;
 import com.colibri.social_story.entities.User;
 import com.firebase.client.Firebase;
 
+import java.util.concurrent.CountDownLatch;
+
 import static com.colibri.social_story.utils.Utils.*;
 
 public class FBUserPersister implements UserPersister {
@@ -15,8 +17,14 @@ public class FBUserPersister implements UserPersister {
 
     @Override
     public void persistUser(User u) {
-        fb.child("profiles").updateChildren(
-                mapFromKeys(u.getUserName(), (Object) u));
+        CountDownLatch done = new CountDownLatch(1);
+        fb.child("profiles/" + u.getUserName()).setValue(
+                (Object) u, new ReleaseLatchCompletionListener(done));
+        try {
+            done.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

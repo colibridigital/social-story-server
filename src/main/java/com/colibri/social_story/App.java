@@ -139,7 +139,7 @@ public class App {
                 e.printStackTrace();
             }
 
-            // postProcessStory(newStory);
+            postProcessStory(newStory);
             persister.save(newStory);
         }
 
@@ -151,6 +151,7 @@ public class App {
         }
 
         private List<User> updateUserScores(Story story) {
+            log.info("Updating user score");
             List<User> users = new ArrayList<>();
             for (Votes votes : story.votesHistory()) {
                 users.addAll(votes.rewardUsers());
@@ -159,6 +160,7 @@ public class App {
         }
 
         private void persistUsers(List<User> users) {
+            log.info("Updating user info");
             // TODO make this single instance (needs synchronization)
             UserPersister up = new FBUserPersister(new Firebase(FB_ROOT_URL));
             for (User u : users)
