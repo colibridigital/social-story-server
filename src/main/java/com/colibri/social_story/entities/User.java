@@ -8,6 +8,7 @@ import lombok.NonNull;
 public class User {
     @NonNull
     private String userName;
+    private int score = 0;
 
     public User() {}
 
