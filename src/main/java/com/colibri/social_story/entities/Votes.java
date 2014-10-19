@@ -3,6 +3,8 @@ package com.colibri.social_story.entities;
 import java.util.*;
 
 public class Votes {
+    private static final int winnerReward = 2;
+
     //Word: Username (who suggested the word): Num Votes
     private Set<ScoredWord> words = new HashSet<>();
 
@@ -40,7 +42,7 @@ public class Votes {
     public List<User> rewardUsers() {
         List<User> rewardedUsers = new ArrayList<>();
         User user = winner.getUser();
-        user.addScore(2);
+        user.addScore(winnerReward);
         rewardedUsers.add(user);
         return rewardedUsers;
     }
