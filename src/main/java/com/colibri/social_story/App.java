@@ -1,10 +1,9 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
-import com.colibri.social_story.transport.FBRankingsPersister;
-import com.colibri.social_story.transport.FBUserPersister;
-import com.colibri.social_story.transport.RankingsPersister;
-import com.colibri.social_story.transport.UserPersister;
+import com.colibri.social_story.persistence.MongoPersister;
+import com.colibri.social_story.persistence.StoryPersister;
+import com.colibri.social_story.transport.*;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;

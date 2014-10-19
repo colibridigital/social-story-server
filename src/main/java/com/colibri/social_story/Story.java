@@ -1,6 +1,8 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
+import com.colibri.social_story.transport.StoryBase;
+import com.colibri.social_story.transport.StoryBaseCallback;
 import com.colibri.social_story.utils.Pair;
 import lombok.AccessLevel;
 import lombok.Data;

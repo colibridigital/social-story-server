@@ -1,5 +1,7 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.transport.StoryBase;
+import com.colibri.social_story.transport.StoryBaseCallback;
 import junit.framework.TestCase;
 import org.mockito.InOrder;
 

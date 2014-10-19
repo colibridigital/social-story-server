@@ -1,4 +1,4 @@
-package com.colibri.social_story;
+package com.colibri.social_story.transport;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;

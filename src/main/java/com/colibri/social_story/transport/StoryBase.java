@@ -1,4 +1,6 @@
-package com.colibri.social_story;
+package com.colibri.social_story.transport;
+
+import com.colibri.social_story.Story;
 
 public interface StoryBase {
 

@@ -1,9 +1,8 @@
-package com.colibri.social_story;
+package com.colibri.social_story.transport;
 
-import com.colibri.social_story.transport.ReleaseLatchCompletionListener;
+import com.colibri.social_story.*;
 import com.colibri.social_story.utils.Pair;
 import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
 
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;

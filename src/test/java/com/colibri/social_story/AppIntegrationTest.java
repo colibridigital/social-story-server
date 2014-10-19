@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.persistence.StoryPersister;
 import com.colibri.social_story.utils.Pair;
 import junit.framework.TestCase;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;

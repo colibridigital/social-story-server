@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.persistence.MongoPersister;
 import junit.framework.TestCase;
 
 import java.util.Timer;

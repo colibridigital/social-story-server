@@ -1,9 +1,6 @@
 package com.colibri.social_story.transport;
 
-import com.colibri.social_story.Superbase;
 import com.colibri.social_story.entities.Ranking;
-
-import java.util.concurrent.CountDownLatch;
 
 public class FBRankingsPersister implements RankingsPersister {
 

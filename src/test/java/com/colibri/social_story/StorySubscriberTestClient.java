@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.transport.FirebaseValueEventListenerAdapter;
 import com.colibri.social_story.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;

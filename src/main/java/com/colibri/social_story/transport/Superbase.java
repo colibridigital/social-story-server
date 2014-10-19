@@ -1,4 +1,4 @@
-package com.colibri.social_story;
+package com.colibri.social_story.transport;
 
 import com.colibri.social_story.transport.ReleaseLatchCompletionListener;
 import com.firebase.client.Firebase;
