@@ -95,7 +95,6 @@ public class FirebaseStoryBase implements StoryBase {
         }
     }
 
-
     private static class ReleaseLatchCompletionListener implements Firebase.CompletionListener {
         private final CountDownLatch done;
 

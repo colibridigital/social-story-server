@@ -2,6 +2,8 @@ package com.colibri.social_story;
 
 import com.colibri.social_story.entities.Ranking;
 import com.colibri.social_story.entities.User;
+import com.colibri.social_story.transport.FBUserPersister;
+import com.colibri.social_story.transport.UserPersister;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -16,7 +18,8 @@ public class App {
 
     private static final Logger log = Logger.getLogger(App.class.getName());
 
-    public static final String FB_URL = "https://sizzling-torch-6706.firebaseio.com/social-story/live-stories/";
+    public static final String FB_ROOT_URL = "https://sizzling-torch-6706.firebaseio.com/social-story/";
+    public static final String FB_URL = FB_ROOT_URL + "/live-stories/";
 
     private static final int DEFAULT_SUGGEST_TIME = 30 * 1000;
     private static final int DEFAULT_VOTE_TIME = 30 * 1000;
@@ -151,9 +154,11 @@ public class App {
             return null;
         }
 
-
         private void persistUsers(List<User> users) {
-
+            // TODO make this single instance (needs synchronization)
+            UserPersister up = new FBUserPersister(new Firebase(FB_ROOT_URL));
+            for (User u : users)
+                up.persistUser(u);
         }
 
         private Ranking updateRankings(List<User> users) {
