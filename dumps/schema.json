@@ -1,0 +1,45 @@
+{
+    "social-story" : {
+        "live-stories" : {
+        },
+        "schema" : {
+            "1" : {
+                "minUsers" : 2,
+                "nrounds" : 1,
+                "phase" : "VOTE",
+                "phaseStarted" : 1413721396405,
+                "story" : "My big story",
+                "suggestTime" : 2000,
+                "timeStarted" : 1413721394366,
+                "title" : "Story One",
+                "users" : {
+                    "megatron1" : {
+                        "userName" : "megatron1"
+                    },
+                    "megatron2" : {
+                        "userName" : "megatron2"
+                    },
+                    "megatron3" : {
+                        "userName" : "megatron3"
+                    }
+                },
+                "voteTime" : 2000,
+                "suggestions" : {
+                    "megatron1" : " one rulz!",
+                    "megatron2" : " one rulz!",
+                    "megatron3" : " one rulz!"
+                },
+                "votes" : {
+                    "megatron1" : " one rulz!",
+                    "megatron2" : " one rulz!",
+                    "megatron3" : " one rulz!"
+                },
+                "words" : {
+                    " one rulz!" : {
+                        "userName" : "megatron1"
+                    }
+                }
+            }
+        }
+    }
+}
