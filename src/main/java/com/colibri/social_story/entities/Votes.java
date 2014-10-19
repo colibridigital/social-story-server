@@ -1,12 +1,12 @@
 package com.colibri.social_story.entities;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Votes {
     //Word: Username (who suggested the word): Num Votes
     private Set<ScoredWord> words = new HashSet<>();
+
+    private ScoredWord winner;
 
     public void addWord(User user, String word) {
         ScoredWord thisWord = new ScoredWord(user, word, 0);
@@ -25,10 +25,23 @@ public class Votes {
     }
 
     public ScoredWord pickWinner() {
-        return words.size() > 0 ? Collections.max(words) : null;
+        winner = words.size() > 0 ? Collections.max(words) : null;
+        return winner;
     }
 
     public Set<ScoredWord> getWords() {
         return new HashSet<>(words);
+    }
+
+    public ScoredWord getWinner() {
+        return winner;
+    }
+
+    public List<User> rewardUsers() {
+        List<User> rewardedUsers = new ArrayList<>();
+        User user = winner.getUser();
+        user.addScore(2);
+        rewardedUsers.add(user);
+        return rewardedUsers;
     }
 }

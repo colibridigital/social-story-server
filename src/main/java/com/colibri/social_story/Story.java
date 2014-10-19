@@ -158,6 +158,14 @@ public class Story extends AbstractStory {
         }
         return m;
     }
+
+    public List<Suggestions> suggestionsHistory() {
+        return this.suggestions;
+    }
+
+    public List<Votes> votesHistory() {
+        return this.votes;
+    }
 }
 
 

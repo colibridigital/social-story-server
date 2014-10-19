@@ -1,12 +1,12 @@
 package com.colibri.social_story;
 
-import com.colibri.social_story.entities.Ranking;
-import com.colibri.social_story.entities.User;
+import com.colibri.social_story.entities.*;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -140,17 +140,19 @@ public class App {
         }
 
         private void postProcessStory(Story newStory) {
-            List<User> updatedUsers = updateUserScores();
+            List<User> updatedUsers = updateUserScores(newStory);
             persistUsers(updatedUsers);
             Ranking newRanking = updateRankings(updatedUsers);
             persistRanking(newRanking);
         }
 
-        private List<User> updateUserScores() {
-            // TODO
-            return null;
+        private List<User> updateUserScores(Story story) {
+            List<User> users = new ArrayList<>();
+            for (Votes votes : story.votesHistory()) {
+                users.addAll(votes.rewardUsers());
+            }
+            return users;
         }
-
 
         private void persistUsers(List<User> users) {
 

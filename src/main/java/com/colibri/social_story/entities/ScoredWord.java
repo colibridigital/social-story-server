@@ -9,11 +9,11 @@ public class ScoredWord implements  Comparable<ScoredWord> {
 
     @NonNull
     private User user;
+
     @NonNull
     private String word;
     @NonNull
     private int score;
-
     public void incrementScore() {
         score++;
     }
@@ -21,5 +21,9 @@ public class ScoredWord implements  Comparable<ScoredWord> {
     @Override
     public int compareTo(ScoredWord o) {
         return Integer.compare(this.score, o.score);
+    }
+
+    public User getUser() {
+        return user;
     }
 }
