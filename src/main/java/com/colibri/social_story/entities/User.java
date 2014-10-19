@@ -19,7 +19,7 @@ public class User {
         this.score = score;
     }
 
-    public void addScore(int extraScore) {
+    public synchronized void addScore(int extraScore) {
         score += extraScore;
     }
 }

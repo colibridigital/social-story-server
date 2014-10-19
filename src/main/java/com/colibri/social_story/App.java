@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
@@ -38,6 +39,8 @@ public class App {
 
     private StoryPersister persister = new MongoPersister();
     private boolean stop = false;
+
+    private Ranking ranking;
 
     public App(int suggestTime, int voteTime, int nRounds, StoryPersister storyPersister) {
         this.suggestTime = suggestTime;
@@ -115,7 +118,8 @@ public class App {
                     suggestTime,
                     voteTime,
                     nRounds,
-                    title.toString()
+                    title.toString(),
+                    userStore
             );
             es.submit(new StoryRunner(newStory));
         }
@@ -152,7 +156,7 @@ public class App {
         private void postProcessStory(Story newStory) {
             List<User> updatedUsers = updateUserScores(newStory);
             persistUsers(updatedUsers);
-            Ranking newRanking = updateRankings(updatedUsers);
+            Ranking newRanking = updateRankings();
             persistRanking(newRanking);
         }
 
@@ -173,9 +177,17 @@ public class App {
                 up.persistUser(u);
         }
 
-        private Ranking updateRankings(List<User> users) {
-            // TODO
-            return null;
+        private Ranking updateRankings() {
+            synchronized(App.this) {
+                Collections.sort(allUsers, new Comparator<User>() {
+                    @Override
+                    public int compare(User o1, User o2) {
+                        return o2.getScore() - o1.getScore();
+                    }
+                });
+            }
+            ranking = new Ranking(allUsers.subList(0, Math.min(9, allUsers.size())));
+            return ranking;
         }
 
         private void persistRanking(Ranking ranking) {
