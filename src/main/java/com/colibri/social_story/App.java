@@ -26,7 +26,7 @@ public class App {
     public static final String FB_URL = FB_ROOT_URL + "/live-stories/";
 
     private final Vector<User> allUsers = new Vector<>();
-    private final UserStore userStore = new FBUserPersister(new Firebase(FB_URL));
+    private final UserStore userStore = new FBUserPersister(new Firebase(FB_ROOT_URL));
 
     private static final int DEFAULT_SUGGEST_TIME = 30 * 1000;
     private static final int DEFAULT_VOTE_TIME = 30 * 1000;

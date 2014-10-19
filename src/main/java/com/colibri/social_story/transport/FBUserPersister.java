@@ -13,7 +13,7 @@ public class FBUserPersister implements UserStore {
 
     private static final Logger log = Logger.getLogger(FBUserPersister.class.getName());
 
-    private static final String USERS = "users/";
+    private static final String USERS = "users";
     private final Firebase fb;
     private final Vector<User> userCache = new Vector<>();
 
@@ -24,7 +24,7 @@ public class FBUserPersister implements UserStore {
     @Override
     public void persistUser(User u) {
         CountDownLatch done = new CountDownLatch(1);
-        fb.child(USERS + u.getUserName()).setValue(
+        fb.child(USERS + u.getUsername()).setValue(
                 (Object) u, new ReleaseLatchCompletionListener(done));
         try {
             done.await();
@@ -42,9 +42,12 @@ public class FBUserPersister implements UserStore {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    users.add((User) ds.getValue());
-                    done.countDown();
+                    System.out.println(dataSnapshot.getValue());
+                    User u = ds.getValue(User.class);
+                    users.add(u);
+                    userCache.add(u);
                 }
+                done.countDown();
             }
         });
         try {

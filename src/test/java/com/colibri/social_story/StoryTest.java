@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.transport.UserStore;
 import junit.framework.TestCase;
 import org.mockito.InOrder;
 
@@ -13,7 +14,7 @@ public class StoryTest extends TestCase {
 
         StoryBase storyBase = mock(StoryBase.class);
         int nRounds = 2;
-        Story sr = new Story(0, storyBase, 0, 0, 2, "Some title");
+        Story sr = new Story(0, storyBase, 0, 0, 2, "Some title", mock(UserStore.class));
         sr.connect();
 
         InOrder inOrder = inOrder(storyBase);
