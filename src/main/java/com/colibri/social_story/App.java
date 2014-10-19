@@ -173,12 +173,12 @@ public class App {
                 Collections.sort(allUsers, new Comparator<User>() {
                     @Override
                     public int compare(User o1, User o2) {
-                        return o1.getScore() - o2.getScore();
+                        return o2.getScore() - o1.getScore();
                     }
                 });
             }
-            // TODO
-            return null;
+            ranking = new Ranking(allUsers.subList(0, Math.min(9, allUsers.size())));
+            return ranking;
         }
 
         private void persistRanking(Ranking ranking) {
