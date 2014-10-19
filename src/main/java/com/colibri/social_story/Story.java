@@ -116,8 +116,6 @@ public class Story extends AbstractStory {
         end();
     }
 
-
-
     private void suggestionEnd() throws InterruptedException {
         log.info("Suggestion end");
         roundVotes = roundSuggestions.getWordsForVote();

@@ -13,7 +13,7 @@ public class App {
 
     private static final Logger log = Logger.getLogger(App.class.getName());
 
-    public static final String FB_URL = "https://colibristory.firebaseio.com/social-story/live-stories/";
+    public static final String FB_URL = "https://sizzling-torch-6706.firebaseio.com/social-story/live-stories/";
 
     private static final int DEFAULT_SUGGEST_TIME = 30 * 1000;
     private static final int DEFAULT_VOTE_TIME = 30 * 1000;
