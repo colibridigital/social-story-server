@@ -101,12 +101,12 @@ public class Story extends AbstractStory {
         while (!finish && r < nRounds) {
             phase = Phase.SUGGEST;
             phaseStarted = sb.getServerOffsetMillis();
-            sb.syncWrite(this);
+            sb.saveStory(this);
             Thread.sleep(suggestTime);
             suggestionEnd();
             phase = Phase.VOTE;
             phaseStarted = sb.getServerOffsetMillis();
-            sb.syncWrite(this);
+            sb.saveStory(this);
             Thread.sleep(voteTime);
             finish = voteEnd();
             sb.removeStory();
@@ -130,6 +130,7 @@ public class Story extends AbstractStory {
         ScoredWord sw = roundVotes.pickWinner();
         if (sw == null)
             return false;
+        log.info("Adding word to story " + sw);
         story = story + sw.getWord();
         votes.add(roundVotes);
         roundVotes = new Votes();

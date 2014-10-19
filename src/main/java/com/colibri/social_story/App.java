@@ -1,6 +1,10 @@
 package com.colibri.social_story;
 
 import com.colibri.social_story.entities.*;
+import com.colibri.social_story.transport.FBRankingsPersister;
+import com.colibri.social_story.transport.FBUserPersister;
+import com.colibri.social_story.transport.RankingsPersister;
+import com.colibri.social_story.transport.UserPersister;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -16,7 +20,8 @@ public class App {
 
     private static final Logger log = Logger.getLogger(App.class.getName());
 
-    public static final String FB_URL = "https://sizzling-torch-6706.firebaseio.com/social-story/live-stories/";
+    public static final String FB_ROOT_URL = "https://sizzling-torch-6706.firebaseio.com/social-story/";
+    public static final String FB_URL = FB_ROOT_URL + "/live-stories/";
 
     private static final int DEFAULT_SUGGEST_TIME = 30 * 1000;
     private static final int DEFAULT_VOTE_TIME = 30 * 1000;
@@ -95,7 +100,7 @@ public class App {
             // TODO read values from snapshot
             String storyId = dataSnapshot.getName();
             final Map<String, Object> attributes = getAttributesMap(dataSnapshot);
-            final Firebase ref = new Firebase(FB_URL + storyId);
+            final Superbase ref = new Superbase(FB_URL + storyId);
             Object title = attributes.get("title");
             int minUsers = (int) (long) attributes.get("minUsers");
             final Story newStory = new Story(
@@ -134,9 +139,8 @@ public class App {
                 e.printStackTrace();
             }
 
-            postProcessStory(newStory);
+            // postProcessStory(newStory);
             persister.save(newStory);
-
         }
 
         private void postProcessStory(Story newStory) {
@@ -155,7 +159,10 @@ public class App {
         }
 
         private void persistUsers(List<User> users) {
-
+            // TODO make this single instance (needs synchronization)
+            UserPersister up = new FBUserPersister(new Firebase(FB_ROOT_URL));
+            for (User u : users)
+                up.persistUser(u);
         }
 
         private Ranking updateRankings(List<User> users) {
@@ -164,7 +171,8 @@ public class App {
         }
 
         private void persistRanking(Ranking ranking) {
-
+            RankingsPersister rp = new FBRankingsPersister(new Superbase(FB_ROOT_URL));
+            rp.saveRanking(ranking);
         }
     }
 }

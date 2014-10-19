@@ -1,31 +1,31 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.transport.ReleaseLatchCompletionListener;
 import com.colibri.social_story.utils.Pair;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseStoryBase implements StoryBase {
 
-    private final Firebase fb;
+    private final Superbase sb;
 
-    public FirebaseStoryBase(Firebase fb) {
-        this.fb = fb;
+    public FirebaseStoryBase(Superbase sb) {
+        this.sb = sb;
     }
 
     private void syncClear(String path) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
-        fb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
+        sb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
         done.await();
     }
 
     private Pair<String, Object> syncGetLeafFromRoot(String path) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
         final Pair<String, Object> value = new Pair<>();
-        fb.getRoot().child(path).addValueEventListener( new FirebaseValueEventListenerAdapter() {
+        sb.getRoot().child(path).addValueEventListener( new FirebaseValueEventListenerAdapter() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 value.fst = dataSnapshot.getName();
@@ -39,7 +39,7 @@ public class FirebaseStoryBase implements StoryBase {
 
     @Override
     public void onUserAdded(final StoryBaseCallback storyBaseCallback) {
-        fb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+        sb.child("users").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 storyBaseCallback.handle(dataSnapshot.getName());
@@ -48,7 +48,7 @@ public class FirebaseStoryBase implements StoryBase {
 
     @Override
     public void onWordAdded(final StoryBaseCallback storyBaseCallback) {
-        fb.child("suggestions").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+        sb.child("suggestions").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 storyBaseCallback.handle(
@@ -60,7 +60,7 @@ public class FirebaseStoryBase implements StoryBase {
 
     @Override
     public void onVotesAdded(final StoryBaseCallback storyBaseCallback) {
-        fb.child("votes").addChildEventListener(new FirebaseChildEventListenerAdapter() {
+        sb.child("votes").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 storyBaseCallback.handle(
@@ -71,19 +71,14 @@ public class FirebaseStoryBase implements StoryBase {
     }
 
     @Override
-    public long getServerOffsetMillis() throws InterruptedException {
-        Pair<String, Object> offset = syncGetLeafFromRoot(".info/serverTimeOffset");
-        return new Date().getTime() + (Long)offset.snd;
+    public void saveStory(Story story) {
+        sb.syncWrite(null, story);
     }
 
     @Override
-    public void syncWrite(Object object) {
-        try {
-            final CountDownLatch done = new CountDownLatch(1);
-            fb.setValue(object, new ReleaseLatchCompletionListener(done));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public long getServerOffsetMillis() throws InterruptedException {
+        Pair<String, Object> offset = syncGetLeafFromRoot(".info/serverTimeOffset");
+        return new Date().getTime() + (Long)offset.snd;
     }
 
     @Override
@@ -92,20 +87,6 @@ public class FirebaseStoryBase implements StoryBase {
             syncClear("");
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-
-    private static class ReleaseLatchCompletionListener implements Firebase.CompletionListener {
-        private final CountDownLatch done;
-
-        public ReleaseLatchCompletionListener(CountDownLatch done) {
-            this.done = done;
-        }
-
-        @Override
-        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-            done.countDown();
         }
     }
 
