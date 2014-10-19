@@ -147,7 +147,7 @@ public class App {
         private void postProcessStory(Story newStory) {
             List<User> updatedUsers = updateUserScores(newStory);
             persistUsers(updatedUsers);
-            Ranking newRanking = updateRankings(updatedUsers);
+            Ranking newRanking = updateRankings();
             persistRanking(newRanking);
         }
 
