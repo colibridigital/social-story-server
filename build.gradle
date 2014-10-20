@@ -1,12 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "net.saliman:gradle-cobertura-plugin:2.2.4"
-    }
-}
-
 repositories {
     mavenCentral()
     jcenter()
@@ -16,7 +7,7 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'pmd'
 apply plugin: 'build-dashboard'
-apply plugin: 'cobertura'
+apply plugin: 'jacoco'
 
 subprojects {
     tasks.withType(Test) {
