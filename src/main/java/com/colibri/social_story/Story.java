@@ -46,6 +46,7 @@ public class Story extends AbstractStory {
     private Suggestions roundSuggestions;
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Votes roundVotes;
+    @Getter(AccessLevel.NONE)
     private UserStore userStore;
 
     public Story(int minUsers, StoryBase sb,
