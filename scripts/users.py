@@ -11,7 +11,7 @@ def add_user(username, users, fb):
         'username': username,
         'score': 0
     }
-    fb.post(USERS_ROOT, new_user)
+    fb.put(USERS_ROOT, username, new_user)
 
 
 def main():
