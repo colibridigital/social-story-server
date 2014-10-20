@@ -43,6 +43,7 @@ public class FBUserPersister implements UserStore {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     System.out.println(dataSnapshot.getValue());
                     User u = ds.getValue(User.class);
+                    u.setUid(new UserID(ds.getName()));
                     users.add(u);
                     userCache.add(u);
                 }
