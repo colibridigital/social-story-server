@@ -41,7 +41,7 @@ public class Suggestions {
     public Map<String, Object> getSuggestedWords() {
         Map<String, Object> mp = new HashMap<>();
         for (Map.Entry<User, String> me : suggestedWords.entrySet()) {
-            mp.put(me.getKey().getUserName(), me.getValue());
+            mp.put(me.getKey().getUsername(), me.getValue());
         }
         return mp;
     }

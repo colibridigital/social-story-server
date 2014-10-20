@@ -4,11 +4,19 @@ import com.colibri.social_story.entities.*;
 import com.colibri.social_story.persistence.MongoPersister;
 import com.colibri.social_story.persistence.StoryPersister;
 import com.colibri.social_story.transport.*;
+import com.colibri.social_story.transport.FBRankingsPersister;
+import com.colibri.social_story.transport.FBUserPersister;
+import com.colibri.social_story.transport.RankingsPersister;
+import com.colibri.social_story.transport.UserStore;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
@@ -20,6 +28,9 @@ public class App {
     public static final String FB_ROOT_URL = "https://sizzling-torch-6706.firebaseio.com/social-story/";
     public static final String FB_URL = FB_ROOT_URL + "/live-stories/";
 
+    private final Vector<User> allUsers = new Vector<>();
+    private final UserStore userStore = new FBUserPersister(new Firebase(FB_ROOT_URL));
+
     private static final int DEFAULT_SUGGEST_TIME = 30 * 1000;
     private static final int DEFAULT_VOTE_TIME = 30 * 1000;
     private static final int N_ROUNDS = 10;
@@ -27,13 +38,10 @@ public class App {
     private int voteTime = DEFAULT_VOTE_TIME;
     private int suggestTime = DEFAULT_SUGGEST_TIME;
 
-    private final BlockingQueue<Story> storyCreationQueue = new LinkedBlockingQueue<>();
     private final ExecutorService es = Executors.newFixedThreadPool(2);
 
     private StoryPersister persister = new MongoPersister();
-    private boolean stop = false;
 
-    private List<User> allUsers;
     private Ranking ranking;
 
     public App(int suggestTime, int voteTime, int nRounds, StoryPersister storyPersister) {
@@ -55,6 +63,9 @@ public class App {
     }
 
     public void run() throws InterruptedException {
+        log.info("Getting user info...");
+        userStore.syncLoadUsers(allUsers);
+        log.info("Connecting to live stories...");
         connect();
         while (!es.isShutdown()) {
             Thread.sleep(5 * 1000);
@@ -109,7 +120,8 @@ public class App {
                     suggestTime,
                     voteTime,
                     nRounds,
-                    title.toString()
+                    title.toString(),
+                    userStore
             );
             es.submit(new StoryRunner(newStory));
         }
@@ -162,7 +174,7 @@ public class App {
         private void persistUsers(List<User> users) {
             log.info("Updating user info");
             // TODO make this single instance (needs synchronization)
-            UserPersister up = new FBUserPersister(new Firebase(FB_ROOT_URL));
+            com.colibri.social_story.transport.UserStore up = new FBUserPersister(new Firebase(FB_ROOT_URL));
             for (User u : users)
                 up.persistUser(u);
         }

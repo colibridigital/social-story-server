@@ -1,15 +1,20 @@
 package com.colibri.social_story.transport;
 
 import com.colibri.social_story.entities.User;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
+import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Logger;
 
-import static com.colibri.social_story.utils.Utils.*;
+public class FBUserPersister implements UserStore {
 
-public class FBUserPersister implements UserPersister {
+    private static final Logger log = Logger.getLogger(FBUserPersister.class.getName());
 
+    private static final String USERS = "users";
     private final Firebase fb;
+    private final Vector<User> userCache = new Vector<>();
 
     public FBUserPersister(Firebase fb) {
         this.fb = fb;
@@ -18,7 +23,7 @@ public class FBUserPersister implements UserPersister {
     @Override
     public void persistUser(User u) {
         CountDownLatch done = new CountDownLatch(1);
-        fb.child("profiles/" + u.getUserName()).setValue(
+        fb.child(USERS + u.getUsername()).setValue(
                 (Object) u, new ReleaseLatchCompletionListener(done));
         try {
             done.await();
@@ -27,8 +32,39 @@ public class FBUserPersister implements UserPersister {
         }
     }
 
+    /** A vector to update with the user information */
     @Override
-    public void loadUser(UserID userId) {
-        throw new UnsupportedOperationException("Load user not implemented!");
+    public void syncLoadUsers(final Vector<User> users) {
+        log.info("Loading all users");
+        final CountDownLatch done = new CountDownLatch(1);
+        fb.child(USERS).addValueEventListener(new FirebaseValueEventListenerAdapter() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    System.out.println(dataSnapshot.getValue());
+                    User u = ds.getValue(User.class);
+                    users.add(u);
+                    userCache.add(u);
+                }
+                done.countDown();
+            }
+        });
+        try {
+            done.await();
+            log.info("Finished loading users");
+            log.info(userCache.toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public User getUserByID(UserID userID) {
+        log.info("Getting user by ID");
+        for (User u : userCache) {
+            if (u.getUid().equals(userID))
+                return u;
+        }
+        return null;
     }
 }

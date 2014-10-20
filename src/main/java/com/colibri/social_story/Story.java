@@ -3,6 +3,8 @@ package com.colibri.social_story;
 import com.colibri.social_story.entities.*;
 import com.colibri.social_story.transport.StoryBase;
 import com.colibri.social_story.transport.StoryBaseCallback;
+import com.colibri.social_story.transport.UserID;
+import com.colibri.social_story.transport.UserStore;
 import com.colibri.social_story.utils.Pair;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -46,16 +48,19 @@ public class Story extends AbstractStory {
     private Suggestions roundSuggestions;
     @Getter(AccessLevel.NONE) @Setter(AccessLevel.NONE)
     private Votes roundVotes;
+    @Getter(AccessLevel.NONE)
+    private UserStore userStore;
 
     public Story(int minUsers, StoryBase sb,
                  int suggestTime, int voteTime,
-                 int nRounds, String title) {
+                 int nRounds, String title, UserStore userStore) {
         this.minUsers = minUsers;
         this.sb = sb;
         this.suggestTime = suggestTime;
         this.voteTime = voteTime;
         this.nRounds = nRounds;
         this.title = title;
+        this.userStore = userStore;
     }
 
     public boolean connect() throws InterruptedException {
@@ -64,7 +69,7 @@ public class Story extends AbstractStory {
                            @Override
                            public void handle(String username) {
                                // TODO do something user
-                               User u = new User(username);
+                               User u = userStore.getUserByID(new UserID(username));
                                users.put(username, u);
                                log.info(u + " joined " + Story.this);
                                done.countDown();
