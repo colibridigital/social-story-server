@@ -6,9 +6,7 @@ import junit.framework.TestCase;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Assert;
 
-import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static com.colibri.social_story.TestUtils.setUpProducerTwoConsumers;
 
@@ -20,12 +18,8 @@ public class AppIntegrationTest extends TestCase {
         setUpProducerTwoConsumers(2, "Story Two", " two rulz!");
 
         final LinkedList<Pair<String, String>> ss = new LinkedList<>();
-        final App app = new App(2 * 1000 , 2 * 1000, 1, new StoryPersister() {
-            @Override
-            public void save(Story s) {
-                ss.add(new Pair<>(s.getTitle(), s.getStory()));
-            }
-        });
+        final App app = new App( 2 * 1000 , 2 * 1000, 1,
+                s -> ss.add(new Pair<>(s.getTitle(), s.getStory())));
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -34,9 +28,9 @@ public class AppIntegrationTest extends TestCase {
         }, 12 * 1000);
         app.run();
         assertEquals(2, ss.size());
-        LinkedList<Pair<String, String>> exp = new LinkedList<>();
-        exp.add(new Pair<>("Story One", "My big story one rulz!"));
-        exp.add(new Pair<>("Story Two", "My big story two rulz!"));
+        List<Pair<String, String>> exp = Arrays.asList(
+                new Pair<>("Story One", "My big story one rulz!"),
+                new Pair<>("Story Two", "My big story two rulz!"));
         Assert.assertThat(ss, IsIterableContainingInAnyOrder.containsInAnyOrder(exp.toArray()));
     }
 }
