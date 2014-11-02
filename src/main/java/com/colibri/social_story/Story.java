@@ -6,6 +6,7 @@ import com.colibri.social_story.transport.StoryBaseCallback;
 import com.colibri.social_story.transport.UserID;
 import com.colibri.social_story.transport.UserStore;
 import com.colibri.social_story.utils.Pair;
+import com.colibri.social_story.utils.Utils;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -173,6 +174,14 @@ public class Story extends AbstractStory {
 
     public List<Votes> votesHistory() {
         return this.votes;
+    }
+
+    public Map<String, String> getUsers() {
+        Map<String, String> usernames = new HashMap<>();
+        for (String k : users.keySet()) {
+            usernames.put(k, k);
+        }
+        return usernames;
     }
 }
 
