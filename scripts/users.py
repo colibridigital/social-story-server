@@ -9,6 +9,7 @@ def add_user(username, users, fb):
     print 'Adding user'
     new_user = {
         'username': username,
+        'email': username + '@gmail.com',
         'score': 0
     }
     fb.post(USERS_ROOT, new_user)
