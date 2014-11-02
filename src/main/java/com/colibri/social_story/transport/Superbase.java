@@ -25,7 +25,7 @@ public class Superbase extends Firebase {
             if (pathFromRoot == null)
                 setValue(object, new ReleaseLatchCompletionListener(done));
             else
-                getRoot().child(pathFromRoot).setValue(object, new ReleaseLatchCompletionListener(done));
+                child(pathFromRoot).setValue(object, new ReleaseLatchCompletionListener(done));
         } catch (Exception e) {
             e.printStackTrace();
         }

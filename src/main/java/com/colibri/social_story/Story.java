@@ -20,6 +20,7 @@ import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
+@Data
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Story extends AbstractStory {
 
@@ -39,6 +40,7 @@ public class Story extends AbstractStory {
     private long phaseStarted;
     private String story = "My big story";
 
+    @Getter(AccessLevel.NONE)
     private final Map<String, User> users = new HashMap<>();
 
     @Getter(AccessLevel.NONE)
@@ -127,7 +129,7 @@ public class Story extends AbstractStory {
     private void suggestionEnd() throws InterruptedException {
         log.info("Suggestion end");
         roundVotes = roundSuggestions.getWordsForVote();
-        roundVotes.addWord(ScoredWord.endStoryWord());
+      //  roundVotes.addWord(ScoredWord.endStoryWord());
         log.info("Round votes: " + roundVotes);
         suggestions.add(roundSuggestions);
         roundSuggestions = new Suggestions();
@@ -142,7 +144,7 @@ public class Story extends AbstractStory {
         story = story + sw.getWord();
         votes.add(roundVotes);
         roundVotes = new Votes();
-        return sw.endsStory();
+        return false; //sw.endsStory();
     }
 
     private void end() {

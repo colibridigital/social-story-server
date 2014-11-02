@@ -27,7 +27,7 @@ public class FBUserPersister implements UserStore {
     @Override
     public void persistUser(User u) {
         CountDownLatch done = new CountDownLatch(1);
-        fb.child(USERS + u.getUsername()).setValue(
+        fb.child(USERS).child(u.getUid().getUid()).setValue(
                 (Object) u, new ReleaseLatchCompletionListener(done));
         try {
             done.await();
@@ -41,11 +41,11 @@ public class FBUserPersister implements UserStore {
     public void syncLoadUsers(final Vector<User> users) {
         log.info("Loading all users");
         final CountDownLatch done = new CountDownLatch(1);
-        fb.child(USERS).addValueEventListener(new FirebaseValueEventListenerAdapter() {
+        fb.child(USERS).addListenerForSingleValueEvent(new FirebaseValueEventListenerAdapter() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    System.out.println(dataSnapshot.getValue());
+                    System.out.println(ds.getValue());
                     User u = ds.getValue(User.class);
                     u.setUid(new UserID(ds.getName()));
                     users.add(u);
@@ -65,11 +65,15 @@ public class FBUserPersister implements UserStore {
 
     @Override
     public User getUserByID(UserID userID) {
-        log.info("Getting user by ID " + userID);
+        log.info("Getting user by ID " + userID.getUid());
         for (User u : userCache) {
-            if (u.getUid().equals(userID))
+            if (u.getUid().equals(userID)) {
+                log.info("Found user " + u);
                 return u;
+            }
+
         }
+        log.info("User not found");
         return null;
     }
 

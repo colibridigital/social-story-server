@@ -149,6 +149,7 @@ public class App {
             }
 
             postProcessStory(newStory);
+            log.info("Saving story " + newStory);
             persister.save(newStory);
         }
 
@@ -169,9 +170,9 @@ public class App {
         }
 
         private void persistUsers(List<User> users) {
-            log.info("Updating user info");
+            log.info("Updating user info " + users);
             // TODO make this single instance (needs synchronization)
-            com.colibri.social_story.transport.UserStore up = new FBUserPersister(new Firebase(FB_ROOT_URL));
+            UserStore up = new FBUserPersister(new Firebase(FB_ROOT_URL));
             for (User u : users)
                 up.persistUser(u);
         }
