@@ -43,4 +43,8 @@ public class ScoredWord implements  Comparable<ScoredWord> {
         endWord.endStory = true;
         return endWord;
     }
+
+    public boolean endsStory() {
+        return this.endStory;
+    }
 }

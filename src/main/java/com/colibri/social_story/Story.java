@@ -141,7 +141,7 @@ public class Story extends AbstractStory {
         story = story + sw.getWord();
         votes.add(roundVotes);
         roundVotes = new Votes();
-        return "End".equals(sw.getWord());
+        return sw.endsStory();
     }
 
     private void end() {
