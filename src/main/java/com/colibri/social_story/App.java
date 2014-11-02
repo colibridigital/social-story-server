@@ -4,10 +4,6 @@ import com.colibri.social_story.entities.*;
 import com.colibri.social_story.persistence.MongoPersister;
 import com.colibri.social_story.persistence.StoryPersister;
 import com.colibri.social_story.transport.*;
-import com.colibri.social_story.transport.FBRankingsPersister;
-import com.colibri.social_story.transport.FBUserPersister;
-import com.colibri.social_story.transport.RankingsPersister;
-import com.colibri.social_story.transport.UserStore;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -20,6 +16,7 @@ import java.util.Vector;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
+
 
 public class App {
 

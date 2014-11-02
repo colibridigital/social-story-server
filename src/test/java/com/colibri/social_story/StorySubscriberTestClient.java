@@ -12,14 +12,14 @@ class StorySubscriberTestClient extends TestClient {
 
     private final String word;
 
-    StorySubscriberTestClient(Firebase fb, String username, String word) {
-        super(fb, username);
+    StorySubscriberTestClient(Firebase fb, String username, String uid, String word) {
+        super(fb, username, uid);
         this.word = word;
     }
 
     @Override
     public void run() {
-        fb.child("users").updateChildren(Utils.mapFromKeys(this.username, (Object) this.username));
+        fb.child("users").updateChildren(Utils.mapFromKeys(this.uid, (Object) this.uid));
         final CountDownLatch done = new CountDownLatch(1);
         fb.child("/phase").addValueEventListener(
                 new FirebaseValueEventListenerAdapter() {
@@ -33,7 +33,7 @@ class StorySubscriberTestClient extends TestClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fb.child("suggestions").updateChildren(Utils.mapFromKeys(this.username, (Object)this.word));
+        fb.child("suggestions").updateChildren(Utils.mapFromKeys(this.uid, (Object)this.word));
 
         final CountDownLatch done2 = new CountDownLatch(1);
         fb.child("phase").addValueEventListener(
@@ -48,6 +48,6 @@ class StorySubscriberTestClient extends TestClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fb.child("votes").updateChildren(Utils.mapFromKeys(this.username, (Object)this.word));
+        fb.child("votes").updateChildren(Utils.mapFromKeys(this.uid, (Object)this.word));
     }
 }

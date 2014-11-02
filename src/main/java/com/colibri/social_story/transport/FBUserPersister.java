@@ -61,7 +61,7 @@ public class FBUserPersister implements UserStore {
 
     @Override
     public User getUserByID(UserID userID) {
-        log.info("Getting user by ID");
+        log.info("Getting user by ID " + userID);
         for (User u : userCache) {
             if (u.getUid().equals(userID))
                 return u;

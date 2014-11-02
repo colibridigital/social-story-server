@@ -15,13 +15,16 @@ import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInA
 
 public class SuggestionsTest extends TestCase {
 
+    public static final String WORD2 = "word2";
+    public static final String WORD1 = "word1";
+
     public void testRemovesDuplicates() {
         Suggestions s = new Suggestions();
-        s.addSuggestion(new User("John"), "word1");
-        s.addSuggestion(new User("Bob"), "word1");
-        s.addSuggestion(new User("Tim"), "word2");
+        s.addSuggestion(new User("John"), WORD1);
+        s.addSuggestion(new User("Bob"), WORD1);
+        s.addSuggestion(new User("Tim"), WORD2);
         Votes v = s.getWordsForVote();
-        List<String> exp = Arrays.asList("word1", "word2");
+        List<String> exp = Arrays.asList(WORD1, WORD2);
         List<String> words = v.getWords().stream().map(ScoredWord::getWord).collect(toList());
         Assert.assertThat(exp, containsInAnyOrder(words.toArray()));
     }
