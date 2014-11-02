@@ -11,8 +11,11 @@ public class Votes {
     private ScoredWord winner;
 
     public void addWord(User user, String word) {
-        ScoredWord thisWord = new ScoredWord(user, word, 0);
-        words.add(thisWord);
+        this.addWord(new ScoredWord(user, word, 0));
+    }
+
+    public void addWord(ScoredWord scoredWord) {
+        words.add(scoredWord);
     }
 
     public void voteForWord(String word, User user) {
@@ -41,9 +44,12 @@ public class Votes {
 
     public List<User> rewardUsers() {
         List<User> rewardedUsers = new ArrayList<>();
+
+        // winner gets rewarded
         User user = winner.getUser();
         user.addScore(winnerReward);
         rewardedUsers.add(user);
+
         return rewardedUsers;
     }
 }
