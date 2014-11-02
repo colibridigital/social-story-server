@@ -6,9 +6,11 @@ import lombok.Data;
 @Data
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class User {
+
     private UserID uid;
     private String username;
     private int score = 0;
+    private String email;
 
     public User() {}
     public User(String userName) {

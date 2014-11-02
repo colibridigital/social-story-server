@@ -1,8 +1,15 @@
 package com.colibri.social_story.transport;
 
-import lombok.Data;
-
-@Data
 public class UserID {
-    private final String uid;
+    private String uid;
+    public UserID() {}
+    public UserID(String uid) {
+        this.uid = uid;
+    }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+    public String getUid() {
+        return uid;
+    }
 }

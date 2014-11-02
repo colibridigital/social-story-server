@@ -15,11 +15,6 @@ public class FirebaseStoryBase implements StoryBase {
         this.sb = sb;
     }
 
-    private void syncClear(String path) throws InterruptedException {
-        final CountDownLatch done = new CountDownLatch(1);
-        sb.child(path).removeValue(new ReleaseLatchCompletionListener(done));
-        done.await();
-    }
 
     private Pair<String, Object> syncGetLeafFromRoot(String path) throws InterruptedException {
         final CountDownLatch done = new CountDownLatch(1);
@@ -62,6 +57,7 @@ public class FirebaseStoryBase implements StoryBase {
         sb.child("votes").addChildEventListener(new FirebaseChildEventListenerAdapter() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println(dataSnapshot.getValue());
                 storyBaseCallback.handle(
                         new Pair<>(dataSnapshot.getName(),
                                    dataSnapshot.getValue()));
@@ -83,7 +79,7 @@ public class FirebaseStoryBase implements StoryBase {
     @Override
     public void removeStory() {
         try {
-            syncClear("");
+            sb.syncClear("");
         } catch (Exception e) {
             e.printStackTrace();
         }

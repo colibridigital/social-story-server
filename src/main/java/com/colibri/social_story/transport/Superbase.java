@@ -1,5 +1,6 @@
 package com.colibri.social_story.transport;
 
+import com.colibri.social_story.entities.User;
 import com.colibri.social_story.transport.ReleaseLatchCompletionListener;
 import com.firebase.client.Firebase;
 
@@ -8,11 +9,14 @@ import java.util.concurrent.CountDownLatch;
 /** A Firebase that sucks less... */
 public class Superbase extends Firebase {
 
-    //private final Firebase fb;
-
     public Superbase(String url) {
         super(url);
-        //this.fb = new Firebase(url);
+    }
+
+    public void syncClear(String path) throws InterruptedException {
+        final CountDownLatch done = new CountDownLatch(1);
+        child(path).removeValue(new ReleaseLatchCompletionListener(done));
+        done.await();
     }
 
     public void syncWrite(String pathFromRoot, Object object) {
@@ -26,4 +30,5 @@ public class Superbase extends Firebase {
             e.printStackTrace();
         }
     }
+
 }

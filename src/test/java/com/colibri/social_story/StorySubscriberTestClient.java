@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.User;
 import com.colibri.social_story.transport.FirebaseValueEventListenerAdapter;
 import com.colibri.social_story.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -12,14 +13,15 @@ class StorySubscriberTestClient extends TestClient {
 
     private final String word;
 
-    StorySubscriberTestClient(Firebase fb, String username, String uid, String word) {
-        super(fb, username, uid);
+    public StorySubscriberTestClient(Firebase storyFb, User user, String word) {
+        super(storyFb, user);
         this.word = word;
     }
 
     @Override
     public void run() {
-        fb.child("users").updateChildren(Utils.mapFromKeys(this.uid, (Object) this.uid));
+        String uid = user.getUid().getUid();
+        fb.child("users").updateChildren(Utils.mapFromKeys( uid, (Object)uid));
         final CountDownLatch done = new CountDownLatch(1);
         fb.child("/phase").addValueEventListener(
                 new FirebaseValueEventListenerAdapter() {
@@ -33,7 +35,7 @@ class StorySubscriberTestClient extends TestClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fb.child("suggestions").updateChildren(Utils.mapFromKeys(this.uid, (Object)this.word));
+        fb.child("suggestions").updateChildren(Utils.mapFromKeys(uid, (Object)this.word));
 
         final CountDownLatch done2 = new CountDownLatch(1);
         fb.child("phase").addValueEventListener(
@@ -48,6 +50,6 @@ class StorySubscriberTestClient extends TestClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fb.child("votes").updateChildren(Utils.mapFromKeys(this.uid, (Object)this.word));
+        fb.child("votes").updateChildren(Utils.mapFromKeys(uid, (Object)this.word));
     }
 }

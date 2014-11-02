@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.User;
 import com.colibri.social_story.utils.Utils;
 import com.firebase.client.Firebase;
 
@@ -11,8 +12,8 @@ public class StoryCreatorTestClient extends TestClient {
     private final String word;
     private int id = 1;
 
-    public StoryCreatorTestClient(Firebase fb, String username, String uid, int id, String title, String word) {
-        super(fb, username, uid);
+    public StoryCreatorTestClient(Firebase fb, User user, int id, String title, String word) {
+        super(fb, user);
         this.id = id;
         this.title = title;
         this.word = word;
@@ -26,7 +27,7 @@ public class StoryCreatorTestClient extends TestClient {
         fb.child(id + "/").setValue(mp);
 
         // subscribe to it as usual
-        StorySubscriberTestClient sub = new StorySubscriberTestClient(fb.child(Integer.toString(id)), this.username, this.uid, word);
+        StorySubscriberTestClient sub = new StorySubscriberTestClient(fb.child(Integer.toString(id)), this.user, word);
         sub.run();
     }
 }

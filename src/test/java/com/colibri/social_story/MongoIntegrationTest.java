@@ -1,19 +1,39 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.User;
 import com.colibri.social_story.persistence.MongoPersister;
+import com.colibri.social_story.transport.FBUserPersister;
+import com.colibri.social_story.transport.Superbase;
+import com.colibri.social_story.transport.UserID;
+import com.colibri.social_story.utils.Utils;
 import junit.framework.TestCase;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static com.colibri.social_story.TestUtils.setUpProducerTwoConsumers;
 
 public class MongoIntegrationTest extends TestCase {
 
     public void testTwoStories() throws InterruptedException {
-
-        setUpProducerTwoConsumers(1, "Story One", " one rulz!");
-        setUpProducerTwoConsumers(2, "Story Two", " two rulz!");
+        Superbase fb = new Superbase(App.FB_URL);
+        fb.syncClear("");
+        FBUserPersister fbUserPersister = new FBUserPersister(fb);
+        Map<String, User> users = Utils.mapFromKeys(
+                "megatron1",
+                new User(new UserID("megatron1"), "megatron1@gmail.com", 0));
+        users.put("megatron2",
+                new User(new UserID("megatron2"), "megatron2@gmail.com", 0));
+        users.put("megatron3",
+                new User(new UserID("megatron3"), "megatron3@gmail.com", 0));
+        fbUserPersister.setUsers(users);
+        setUpProducerTwoConsumers(
+                fb,
+                users,
+                1, "Story One", " one rulz!");
+        setUpProducerTwoConsumers(
+                fb,
+                users,
+                2, "Story Two", " two rulz!");
 
         // TODO clear the Mongo test instance
 

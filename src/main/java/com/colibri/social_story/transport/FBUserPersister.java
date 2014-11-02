@@ -3,7 +3,10 @@ package com.colibri.social_story.transport;
 import com.colibri.social_story.entities.User;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
@@ -15,6 +18,7 @@ public class FBUserPersister implements UserStore {
     private static final String USERS = "users";
     private final Firebase fb;
     private final Vector<User> userCache = new Vector<>();
+    private List<User> users;
 
     public FBUserPersister(Firebase fb) {
         this.fb = fb;
@@ -67,5 +71,21 @@ public class FBUserPersister implements UserStore {
                 return u;
         }
         return null;
+    }
+
+    public void setUsers(Map<String, User> users) throws InterruptedException {
+        final CountDownLatch cd = new CountDownLatch(1);
+        fb.child("users").setValue(users, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                log.info("Done setting users, error: "  + firebaseError);
+                cd.countDown();
+            }
+        });
+        cd.await();
+    }
+
+    public List<User> getUsers() {
+        return users;
     }
 }

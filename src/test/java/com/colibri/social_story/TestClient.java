@@ -1,5 +1,6 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.entities.User;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -10,18 +11,17 @@ import java.util.concurrent.CountDownLatch;
 public abstract class TestClient extends TimerTask {
 
     protected final Firebase fb;
-    protected String username;
-    protected String uid;
+    protected final User user;
 
-    public TestClient(Firebase fb, String username, String uid) {
+    public TestClient(Firebase fb, User user) {
         this.fb = fb;
-        this.uid = uid;
-        this.username = username;
+        this.user = user;
     }
 
     public void auth() {
         final CountDownLatch cd = new CountDownLatch(1);
-        fb.authWithPassword(this.username, "secret", new Firebase.AuthResultHandler() {
+        System.out.println("Authenticating user " + user.getUsername());
+        fb.authWithPassword(user.getUsername(), "secret", new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
                 System.out.println("Auth successful");

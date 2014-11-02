@@ -20,7 +20,6 @@ import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
-@Data
 @SuppressWarnings("PMD.UnusedPrivateField")
 public class Story extends AbstractStory {
 
@@ -44,6 +43,7 @@ public class Story extends AbstractStory {
 
     @Getter(AccessLevel.NONE)
     final private List<Suggestions> suggestions = new Vector<>();
+    @Getter(AccessLevel.NONE)
     final private List<Votes> votes = new Vector<>();
 
     private Suggestions roundSuggestions;
@@ -92,7 +92,7 @@ public class Story extends AbstractStory {
         sb.onVotesAdded(new StoryBaseCallback<Pair<String, String>>() {
             @Override
             public void handle(Pair<String, String> vote) {
-                log.info("Add " + vote + " to " + Story.this);
+                log.info("Add vote " + vote + " to " + Story.this);
                 roundVotes.voteForWord(vote.snd, users.get(vote.fst));
             }
         });
@@ -154,6 +154,7 @@ public class Story extends AbstractStory {
         VOTE, SUGGEST
     }
 
+    /** Getter Methods for Firebase. Tread lightly... */
     public Suggestions getSuggestions() {
         return roundSuggestions;
     }
@@ -182,6 +183,14 @@ public class Story extends AbstractStory {
             usernames.put(k, k);
         }
         return usernames;
+    }
+
+    public String getStory() {
+        return story;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
 
