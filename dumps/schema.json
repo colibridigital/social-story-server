@@ -1,5 +1,26 @@
 {
     "social-story" : {
+        "ranking" : {
+            "topTenUsers" : [ {
+                "score" : 4,
+                "uid" : {
+                    "uid" : "megatron3"
+                },
+                "username" : "megatron3"
+            }, {
+                "score" : 0,
+                "uid" : {
+                    "uid" : "megatron1"
+                },
+                "username" : "megatron1"
+            }, {
+                "score" : 0,
+                "uid" : {
+                    "uid" : "megatron2"
+                },
+                "username" : "megatron2"
+            } ]
+        },
         "profiles" : {
             "megatron1" : {
                 "score" : 2,
