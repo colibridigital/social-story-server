@@ -1,4 +1,4 @@
-package com.colibri.social_story;
+package com.colibri.social_story.bots;
 
 import com.colibri.social_story.entities.User;
 import com.firebase.client.AuthData;
@@ -8,12 +8,12 @@ import com.firebase.client.FirebaseError;
 import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
-public abstract class TestClient extends TimerTask {
+public abstract class Bot extends TimerTask {
 
     protected final Firebase fb;
     protected final User user;
 
-    public TestClient(Firebase fb, User user) {
+    public Bot(Firebase fb, User user) {
         this.fb = fb;
         this.user = user;
     }

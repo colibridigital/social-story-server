@@ -1,5 +1,7 @@
 package com.colibri.social_story;
 
+import com.colibri.social_story.bots.CreateSubscribeBot;
+import com.colibri.social_story.bots.SubscriberBot;
 import com.colibri.social_story.entities.User;
 import com.firebase.client.Firebase;
 
@@ -12,10 +14,10 @@ public class TestUtils {
     /** Creates a story and adds two more subscribers to it. */
     public static void setUpProducerTwoConsumers(Firebase fb, Map<String, User> users, int storyId, String storyTitle, String word) {
         Iterator<User> it = users.values().iterator();
-        StoryCreatorTestClient sc = new StoryCreatorTestClient(fb, it.next(), storyId, storyTitle, word);
+        CreateSubscribeBot sc = new CreateSubscribeBot(fb, it.next(), storyId, storyTitle, word);
         Firebase storyFb = fb.child(Integer.toString(storyId));
-        StorySubscriberTestClient sub1 = new StorySubscriberTestClient(storyFb, it.next(), word);
-        StorySubscriberTestClient sub2 = new StorySubscriberTestClient(storyFb, it.next(), word);
+        SubscriberBot sub1 = new SubscriberBot(storyFb, it.next(), word);
+        SubscriberBot sub2 = new SubscriberBot(storyFb, it.next(), word);
 
         sc.auth();
         sub1.auth();

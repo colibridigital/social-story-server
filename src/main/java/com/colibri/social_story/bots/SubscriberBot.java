@@ -1,4 +1,4 @@
-package com.colibri.social_story;
+package com.colibri.social_story.bots;
 
 import com.colibri.social_story.entities.User;
 import com.colibri.social_story.transport.FirebaseValueEventListenerAdapter;
@@ -9,11 +9,11 @@ import com.firebase.client.Firebase;
 import java.util.concurrent.CountDownLatch;
 
 /** Simple client that connects to a story proposes and votes for the same word. */
-class StorySubscriberTestClient extends TestClient {
+public class SubscriberBot extends Bot {
 
     private final String word;
 
-    public StorySubscriberTestClient(Firebase storyFb, User user, String word) {
+    public SubscriberBot(Firebase storyFb, User user, String word) {
         super(storyFb, user);
         this.word = word;
     }
