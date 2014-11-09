@@ -18,7 +18,7 @@ public abstract class Bot extends TimerTask {
         this.user = user;
     }
 
-    public void auth() {
+    public void auth() throws InterruptedException {
         final CountDownLatch cd = new CountDownLatch(1);
         System.out.println("Authenticating user " + user.getUsername());
         fb.authWithPassword(user.getUsername(), "secret", new Firebase.AuthResultHandler() {
@@ -35,10 +35,6 @@ public abstract class Bot extends TimerTask {
                 cd.countDown();
             }
         });
-        try {
-            cd.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        cd.await();
     }
 }

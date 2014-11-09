@@ -12,7 +12,11 @@ import java.util.Timer;
 public class TestUtils {
 
     /** Creates a story and adds two more subscribers to it. */
-    public static void setUpProducerTwoConsumers(Firebase fb, Map<String, User> users, int storyId, String storyTitle, String word) {
+    public static void setUpProducerTwoConsumers(Firebase fb,
+                                                 Map<String, User> users,
+                                                 int storyId,
+                                                 String storyTitle,
+                                                 String word) throws InterruptedException {
         Iterator<User> it = users.values().iterator();
         CreateSubscribeBot sc = new CreateSubscribeBot(fb, it.next(), storyId, storyTitle, word);
         Firebase storyFb = fb.child(Integer.toString(storyId));
