@@ -21,7 +21,7 @@ public class SubscriberBot extends Bot {
     @Override
     public void run() {
         String uid = user.getUid().getUid();
-        fb.child("users").updateChildren(Utils.mapFromKeys( uid, (Object)uid));
+        fb.child("users").updateChildren(Utils.mapFromKeys(uid, uid));
         final CountDownLatch done = new CountDownLatch(1);
         fb.child("/phase").addValueEventListener(
                 new FirebaseValueEventListenerAdapter() {
@@ -35,7 +35,7 @@ public class SubscriberBot extends Bot {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fb.child("suggestions").updateChildren(Utils.mapFromKeys(uid, (Object)this.word));
+        fb.child("suggestions").updateChildren(Utils.mapFromKeys(uid, this.word));
 
         final CountDownLatch done2 = new CountDownLatch(1);
         fb.child("phase").addValueEventListener(
@@ -50,6 +50,6 @@ public class SubscriberBot extends Bot {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fb.child("votes").updateChildren(Utils.mapFromKeys(uid, (Object)this.word));
+        fb.child("votes").updateChildren(Utils.mapFromKeys(uid, this.word));
     }
 }

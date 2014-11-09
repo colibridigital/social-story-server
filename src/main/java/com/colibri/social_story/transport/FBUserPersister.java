@@ -28,7 +28,7 @@ public class FBUserPersister implements UserStore {
     public void persistUser(User u) {
         CountDownLatch done = new CountDownLatch(1);
         fb.child(USERS).child(u.getUid().getUid()).setValue(
-                (Object) u, new ReleaseLatchCompletionListener(done));
+                u, new ReleaseLatchCompletionListener(done));
         try {
             done.await();
         } catch (InterruptedException e) {

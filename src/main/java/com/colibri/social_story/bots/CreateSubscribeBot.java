@@ -22,7 +22,7 @@ public class CreateSubscribeBot extends Bot {
     @Override
     public void run() {
         // push a new story
-        Map<String, Object> mp = Utils.mapFromKeys("title", (Object)title);
+        Map<String, Object> mp = Utils.mapFromKeys("title", title);
         mp.put("minUsers", 2);
         fb.child(id + "/").setValue(mp);
 
