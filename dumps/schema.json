@@ -71,7 +71,7 @@
             "-JaoiWG65xH3ekph5Dby" : {
                 "minUsers" : 1,
                 "nrounds" : 10,
-                "phase" : "SUGGEST",
+                "phase" : "VOTE",
                 "phaseStarted" : 1416076369291,
                 "story" : "My big story",
                 "suggestTime" : 30000,
