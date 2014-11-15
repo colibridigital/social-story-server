@@ -21,53 +21,80 @@
                 "username" : "megatron2"
             } ]
         },
-        "profiles" : {
+        "users" : {
             "megatron1" : {
-                "score" : 2,
-                "userName" : "megatron1"
+                "score" : 0,
+                "uid" : {
+                    "uid" : "megatron1"
+                },
+                "username" : "megatron1@gmail.com"
+            },
+            "megatron2" : {
+                "score" : 0,
+                "uid" : {
+                    "uid" : "megatron2"
+                },
+                "username" : "megatron2@gmail.com"
             },
             "megatron3" : {
-                "score" : 2,
-                "userName" : "megatron3"
+                "score" : 4,
+                "uid" : {
+                    "uid" : "megatron3"
+                },
+                "username" : "megatron3@gmail.com"
+            },
+            "simplelogin:6" : {
+                "email" : "megatron1@gmail.com",
+                "score" : 0,
+                "username" : "megatron1"
             }
         },
         "live-stories" : {
-        },
-        "schema" : {
-            "1" : {
-                "minUsers" : 2,
-                "nrounds" : 1,
-                "phase" : "VOTE",
-                "phaseStarted" : 1413721396405,
+            "-JaoiY58nDgjkUg8QcEn" : {
+                "minUsers" : 1,
+                "nrounds" : 10,
+                "phase" : "SUGGEST",
+                "phaseStarted" : 1416076369291,
                 "story" : "My big story",
-                "suggestTime" : 2000,
-                "timeStarted" : 1413721394366,
-                "title" : "Story One",
-                "users" : {
-                    "megatron1" : {
-                        "userName" : "megatron1"
-                    },
-                    "megatron2" : {
-                        "userName" : "megatron2"
-                    },
-                    "megatron3" : {
-                        "userName" : "megatron3"
-                    }
-                },
-                "voteTime" : 2000,
+                "suggestTime" : 30000,
                 "suggestions" : {
-                    "megatron1" : " one rulz!",
-                    "megatron2" : " one rulz!",
-                    "megatron3" : " one rulz!"
+                    "simplelogin:6" : "bau"
                 },
+                "timeStarted" : 1416076369290,
+                "title" : "test2",
+                "users" : {
+                    "simplelogin:6" : "simplelogin:6"
+                },
+                "voteTime" : 30000
+                
+            },
+            "-JaoiWG65xH3ekph5Dby" : {
+                "minUsers" : 1,
+                "nrounds" : 10,
+                "phase" : "SUGGEST",
+                "phaseStarted" : 1416076369291,
+                "story" : "My big story",
+                "suggestTime" : 30000,
+                "suggestions" : {
+                    "simplelogin:6" : "bau"
+                },
+                "timeStarted" : 1416076369290,
+                "title" : "test2",
+                "users" : {
+                    "simplelogin:6" : "simplelogin:6"
+                },
+                "voteTime" : 30000,
                 "votes" : {
-                    "megatron1" : " one rulz!",
-                    "megatron2" : " one rulz!",
-                    "megatron3" : " one rulz!"
+                    "simplelogin:6" : "End"
                 },
                 "words" : {
-                    " one rulz!" : {
-                        "userName" : "megatron1"
+                    "bleah" : {
+                        "email" : "megatron1@gmail.com",
+                        "score" : 0,
+                        "uid" : {
+                            "uid" : "simplelogin:6"
+                        },
+                        "username" : "megatron1"
                     }
                 }
             }
